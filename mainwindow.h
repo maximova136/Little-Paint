@@ -10,6 +10,7 @@
 #include <QWidget>
 #include <vector>
 
+#include "paintscene.h"
 
 enum BUTTON {ELLIPSE=0, RECTANGLE, TRIANGLE, LINE, CURVE, POLYGON};
 class QGroupBox;
@@ -35,7 +36,8 @@ signals:
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsScene *scene;
+    //QGraphicsScene *scene;
+    paintScene *scene;
     QGraphicsEllipseItem *ellipse;
     QGraphicsRectItem *rectangle;
     std::vector <QPushButton*> allButtons;

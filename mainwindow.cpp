@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+
 #include <vector>
 #include <iostream>
 #include <QDebug>
@@ -9,11 +11,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    scene = new QGraphicsScene(this);
-    scene->setSceneRect(0,0,50,50);
-    ui->graphicsView->setScene(scene);
-    ui->graphicsView->setSceneRect(0,0,50,50);
+//    scene = new QGraphicsScene(this);
+//    scene->setSceneRect(0,0,50,50);
+//    ui->graphicsView->setScene(scene);
+//    ui->graphicsView->setSceneRect(0,0,50,50);
 
+    scene = new paintScene();
+    ui->graphicsView->setScene(scene);
 
 
     QPushButton *ellipseButton = new QPushButton(tr("&Ellipse"));
