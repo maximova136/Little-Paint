@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->graphicsView->setSceneRect(0,0,50,50);
 
     scene = new paintScene();
+    scene->setSceneRect(0,0, ui->graphicsView->width()-40, ui->graphicsView->height()-30);
     ui->graphicsView->setScene(scene);
 
 
@@ -86,8 +87,14 @@ void MainWindow::on_pushButton_clicked()
     blackPen.setWidth(3);
 
     this->ellipse = this->scene->addEllipse(0,0,30,30,blackPen, blueBrush);
-    //this->ellipse = this->scene->addEllipse()
+
+
     this->ellipse->setFlag(QGraphicsItem::ItemIsMovable);
+
+    //QString path = QFileDialog::getOpenFileName(0,tr("Укажите файл базы данных"),QDir::homePath(), QObject::tr("Файл SQLite (*.db);;Все файлы (*.*)"));
+    //qDebug()<<path;
+    QColor col = QColorDialog::getColor(Qt::blue);
+    qDebug()<<col;
 
 
 }
