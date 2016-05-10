@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QPushButton *ellipseButton = new QPushButton(tr("&Ellipse"));
     ellipseButton->setObjectName(tr("Ellipse"));
-    //ellipseButton->setDown(true);
+
     QPushButton *rectangleButton = new QPushButton(tr("&Rectangle"));
     rectangleButton->setObjectName(tr("Rectangle"));
     QPushButton *triangleButton = new QPushButton(tr("&Triangle"));
@@ -36,15 +36,17 @@ MainWindow::MainWindow(QWidget *parent) :
     polygonButton->setObjectName(tr("Polygon"));
     QPushButton *brushButton = new QPushButton(tr("&Brush"));
     brushButton->setObjectName(tr("Brush"));
+    QPushButton *textButton = new QPushButton(tr("&Text"));
+    brushButton->setObjectName(tr("Text"));
 
+    allButtons.push_back(brushButton);
     allButtons.push_back(ellipseButton);
     allButtons.push_back(rectangleButton);
     allButtons.push_back(triangleButton);
     allButtons.push_back(lineButton);
     allButtons.push_back(curveButton);
     allButtons.push_back(polygonButton);
-    allButtons.push_back(brushButton);
-
+    allButtons.push_back(textButton);
 
 
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -62,8 +64,13 @@ MainWindow::MainWindow(QWidget *parent) :
         //connect(allButtons[i],SIGNAL(clicked(int)),this, SLOT(on_allButtons_clicked(int)));
        // connect(allButtons[i],SIGNAL(clicked()),this, SLOT(on_allButtons_clicked()));
         connect(allButtons[i],SIGNAL(clicked()),this, SLOT(on_allButtons_clicked()));
+        allButtons[i]->setCheckable(true);
     }
-
+    allButtons[0]->setChecked(true);
+    QGraphicsDropShadowEffect* pShadow = new QGraphicsDropShadowEffect;
+    pShadow->setXOffset(2);
+    pShadow->setYOffset(2);
+    allButtons[0]->setGraphicsEffect(pShadow);
     ui->centralWidget->setLayout(hbox);
 
 
@@ -88,7 +95,6 @@ void MainWindow::on_pushButton_clicked()
 
     this->ellipse = this->scene->addEllipse(0,0,30,30,blackPen, blueBrush);
 
-
     this->ellipse->setFlag(QGraphicsItem::ItemIsMovable);
 
     //QString path = QFileDialog::getOpenFileName(0,tr("Укажите файл базы данных"),QDir::homePath(), QObject::tr("Файл SQLite (*.db);;Все файлы (*.*)"));
@@ -107,15 +113,20 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_allButtons_clicked()
 {
-//    QObject sender();
-//    for (unsigned int i = 0; i < buttons.size(); i++)
-//    {
-//        if (buttons[i]->mouseReleaseEvent())
-//            std::cout<<i;
-//    }
+    QPushButton *currentButton = (QPushButton*) sender();
+    qDebug()<<currentButton->objectName();
 
-    qDebug()<<sender()->objectName();
-    //qDebug()<<" CLICKED!";
+    for (unsigned int i = 0; i < allButtons.size(); i++)
+    {
+        allButtons[i]->setChecked(false);
+        allButtons[i]->setGraphicsEffect(0);
+    }
+    currentButton->setChecked(true);
+    QGraphicsDropShadowEffect* pShadow = new QGraphicsDropShadowEffect;
+    pShadow->setXOffset(2);
+    pShadow->setYOffset(2);
+    currentButton->setGraphicsEffect(pShadow);
+    this->scene->setSettings(currentButton->objectName(),QColor(Qt::darkBlue),Qt::DotLine,QColor(Qt::yellow),Qt::BDiagPattern);
 }
 
 
@@ -132,7 +143,12 @@ QVBoxLayout *MainWindow::createToolsGroup()
     return vbox;
 }
 
+void MainWindow::setSettings()
+{
 
+}
+
+/*
 void MainWindow::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 
@@ -149,4 +165,4 @@ void MainWindow::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     previousPoint = event->scenePos();
     qDebug()<<"mouse moved";
 
-}
+}*/

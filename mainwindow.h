@@ -41,12 +41,13 @@ private:
     QGraphicsEllipseItem *ellipse;
     QGraphicsRectItem *rectangle;
     std::vector <QPushButton*> allButtons;
-    QPointF previousPoint;
+
 
     QVBoxLayout *createToolsGroup();
+    void setSettings();
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
+   // void mousePressEvent(QGraphicsSceneMouseEvent *event);
+   // void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
 
 
 };

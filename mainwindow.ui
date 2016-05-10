@@ -6,17 +6,11 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>400</height>
+    <width>701</width>
+    <height>454</height>
    </rect>
   </property>
   <property name="minimumSize">
-   <size>
-    <width>600</width>
-    <height>400</height>
-   </size>
-  </property>
-  <property name="maximumSize">
    <size>
     <width>600</width>
     <height>400</height>
@@ -29,10 +23,10 @@
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>70</y>
+      <x>220</x>
+      <y>140</y>
       <width>451</width>
-      <height>271</height>
+      <height>261</height>
      </rect>
     </property>
     <property name="maximumSize">
@@ -61,7 +55,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
+     <width>701</width>
      <height>21</height>
     </rect>
    </property>
@@ -69,6 +63,9 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -81,6 +78,24 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open an image file</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
