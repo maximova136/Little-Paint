@@ -28,6 +28,9 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
+    QAction *actionNew;
+    QAction *actionOpen;
+    QAction *actionSave;
     QWidget *centralWidget;
     QGraphicsView *graphicsView;
     QPushButton *pushButton;
@@ -40,14 +43,19 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(600, 400);
-        MainWindow->setMinimumSize(QSize(600, 400));
-        MainWindow->setMaximumSize(QSize(600, 400));
+        MainWindow->resize(701, 454);
+        MainWindow->setMinimumSize(QSize(701, 454));
+        actionNew = new QAction(MainWindow);
+        actionNew->setObjectName(QStringLiteral("actionNew"));
+        actionOpen = new QAction(MainWindow);
+        actionOpen->setObjectName(QStringLiteral("actionOpen"));
+        actionSave = new QAction(MainWindow);
+        actionSave->setObjectName(QStringLiteral("actionSave"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         graphicsView = new QGraphicsView(centralWidget);
         graphicsView->setObjectName(QStringLiteral("graphicsView"));
-        graphicsView->setGeometry(QRect(130, 70, 451, 271));
+        graphicsView->setGeometry(QRect(220, 140, 451, 261));
         graphicsView->setMaximumSize(QSize(451, 271));
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
@@ -55,7 +63,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 600, 21));
+        menuBar->setGeometry(QRect(0, 0, 701, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         MainWindow->setMenuBar(menuBar);
@@ -67,6 +75,9 @@ public:
         MainWindow->setStatusBar(statusBar);
 
         menuBar->addAction(menuFile->menuAction());
+        menuFile->addAction(actionNew);
+        menuFile->addAction(actionOpen);
+        menuFile->addAction(actionSave);
 
         retranslateUi(MainWindow);
 
@@ -75,7 +86,14 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "LiPa (Little Paint)", 0));
+        actionNew->setText(QApplication::translate("MainWindow", "New", 0));
+        actionNew->setShortcut(QApplication::translate("MainWindow", "F1", 0));
+        actionOpen->setText(QApplication::translate("MainWindow", "Open", 0));
+#ifndef QT_NO_TOOLTIP
+        actionOpen->setToolTip(QApplication::translate("MainWindow", "Open an image file", 0));
+#endif // QT_NO_TOOLTIP
+        actionSave->setText(QApplication::translate("MainWindow", "Save", 0));
         pushButton->setText(QApplication::translate("MainWindow", "Circle", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi

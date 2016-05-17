@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsItem>
 
 class paintScene : public QGraphicsScene
 {
@@ -12,12 +13,26 @@ public:
     ~paintScene();
 
 private:
-    QPointF     previousPoint;      // Координаты предыдущей точки
+    QPointF previousPoint;      // Координаты предыдущей точки
+    QColor penColor; //границы
+    QColor brushColor; //заливка
+    QString drawableObj;
+    QBrush brushStyle;
+    QPen penStyle;
+
+    QGraphicsItem* figure;
+    //QPen pen
+    //QBrush brush
+    // QBrush brushStyl -----> Qt::Brushstyle ????
+
 
 private:
     // Для рисования используем события мыши
     void mousePressEvent(QGraphicsSceneMouseEvent * event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+public:
+    void setSettings(QString _drawableObj, QColor _penColor,QPen _penStyle, QColor _brushColor,  QBrush _brushStyle);
 };
 
 #endif // PAINTSCENE_H
