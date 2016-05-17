@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsItem>
 
 class paintScene : public QGraphicsScene
 {
@@ -18,6 +19,8 @@ private:
     QString drawableObj;
     QBrush brushStyle;
     QPen penStyle;
+
+    QGraphicsItem* figure;
     //QPen pen
     //QBrush brush
     // QBrush brushStyl -----> Qt::Brushstyle ????

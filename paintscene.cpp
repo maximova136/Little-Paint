@@ -21,6 +21,28 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
             previousPoint = event->scenePos();
 
      }
+     else if (drawableObj == "Ellipse")
+     {
+         QBrush blueBrush(Qt::blue);
+         QPen blackPen(Qt::black);
+         //QGraphicsItem* ellipse;
+         blackPen.setWidth(3);
+
+
+         //ellipse = addEllipse(QRect(0,0,30,30),blackPen,blueBrush);
+         //ellipse->setPos(event->scenePos());
+
+         figure = addEllipse(QRect(0,0,40,40),blackPen,blueBrush);
+         figure->setPos(event->scenePos());
+         figure->setFlag(QGraphicsItem::ItemIsMovable);
+         figure->setFlag(QGraphicsItem::ItemIsSelectable);
+
+
+
+        // ellipse->setFlag(QGraphicsItem::ItemIsMovable);
+        // ellipse->setFlag(QGraphicsItem::ItemIsSelectable);
+
+     }
 
      qDebug()<<"mouse pressed";
 
@@ -36,6 +58,11 @@ void paintScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         // Обновляем данные о предыдущей координате
         previousPoint = event->scenePos();
 
+    }
+    else if (drawableObj == "Ellipse")
+    {
+        figure->setX(event->scenePos().rx());
+        figure->setY(event->scenePos().ry());
     }
     qDebug()<<"mouse moved";
 }
@@ -54,4 +81,5 @@ void paintScene::setSettings(QString _drawableObj, QColor _penColor, QPen _penSt
     penStyle = _penStyle;
     brushColor = _brushColor;
     brushStyle = _brushStyle;
+    qDebug()<<"set settings"<<drawableObj;
 }

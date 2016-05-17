@@ -5,6 +5,8 @@
 #include <vector>
 #include <iostream>
 #include <QDebug>
+
+#include "palette.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -34,11 +36,13 @@ MainWindow::MainWindow(QWidget *parent) :
     curveButton->setObjectName(tr("Curve"));
     QPushButton *polygonButton = new QPushButton(tr("&Polygon"));
     polygonButton->setObjectName(tr("Polygon"));
+
     QPushButton *brushButton = new QPushButton(tr("&Brush"));
     brushButton->setObjectName(tr("Brush"));
     QPushButton *textButton = new QPushButton(tr("&Text"));
-    brushButton->setObjectName(tr("Text"));
+    textButton->setObjectName(tr("Text"));
 
+    allButtons.clear();
     allButtons.push_back(brushButton);
     allButtons.push_back(ellipseButton);
     allButtons.push_back(rectangleButton);
@@ -49,10 +53,16 @@ MainWindow::MainWindow(QWidget *parent) :
     allButtons.push_back(textButton);
 
 
+
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addLayout(createToolsGroup());
     hbox->addWidget(ui->graphicsView);
     hbox->addWidget(ui->pushButton);
+
+    //palette = new Palette();
+    //hbox->addWidget(palette);
+    palette = new Palette(mToolbar);
+    addToolBar(Qt::BottomToolBarArea, palette);
 
     /*QVBoxLayout *vbox = new QVBoxLayout;
     vbox->addWidget(ui->menuBar);
@@ -66,12 +76,20 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(allButtons[i],SIGNAL(clicked()),this, SLOT(on_allButtons_clicked()));
         allButtons[i]->setCheckable(true);
     }
+
     allButtons[0]->setChecked(true);
     QGraphicsDropShadowEffect* pShadow = new QGraphicsDropShadowEffect;
     pShadow->setXOffset(2);
     pShadow->setYOffset(2);
     allButtons[0]->setGraphicsEffect(pShadow);
+    //this->scene();
+
+
     ui->centralWidget->setLayout(hbox);
+    ui->mainToolBar->setWhatsThis("i'm future palette");
+
+
+
 
 
     //ui->centralWidget->setLayout(createToolsGroup());
@@ -93,9 +111,10 @@ void MainWindow::on_pushButton_clicked()
 
     blackPen.setWidth(3);
 
-    this->ellipse = this->scene->addEllipse(0,0,30,30,blackPen, blueBrush);
+    /*this->ellipse = this->scene->addEllipse(0,0,30,30,blackPen, blueBrush);
 
     this->ellipse->setFlag(QGraphicsItem::ItemIsMovable);
+    this->ellipse->setFlag(QGraphicsItem::ItemIsSelectable);*/
 
     //QString path = QFileDialog::getOpenFileName(0,tr("Укажите файл базы данных"),QDir::homePath(), QObject::tr("Файл SQLite (*.db);;Все файлы (*.*)"));
     //qDebug()<<path;
@@ -143,8 +162,10 @@ QVBoxLayout *MainWindow::createToolsGroup()
     return vbox;
 }
 
-void MainWindow::setSettings()
+QHBoxLayout* MainWindow::createPalette()
 {
+    QHBoxLayout* hbox = new QHBoxLayout;
+
 
 }
 

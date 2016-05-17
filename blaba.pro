@@ -15,12 +15,18 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     abstractfigure.cpp \
-    paintscene.cpp
+    paintscene.cpp \
+    palette.cpp \
+    palettebutton.cpp
 
 
 HEADERS  += mainwindow.h \
     abstractfigure.h \
-    paintscene.h
+    paintscene.h \
+    palette.h \
+    palettebutton.h
 
 
 FORMS    += mainwindow.ui
+
+DISTFILES +=

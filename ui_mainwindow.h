@@ -44,7 +44,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->resize(701, 454);
-        MainWindow->setMinimumSize(QSize(600, 400));
+        MainWindow->setMinimumSize(QSize(701, 454));
         actionNew = new QAction(MainWindow);
         actionNew->setObjectName(QStringLiteral("actionNew"));
         actionOpen = new QAction(MainWindow);
@@ -86,8 +86,9 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "LiPa (Little Paint)", 0));
         actionNew->setText(QApplication::translate("MainWindow", "New", 0));
+        actionNew->setShortcut(QApplication::translate("MainWindow", "F1", 0));
         actionOpen->setText(QApplication::translate("MainWindow", "Open", 0));
 #ifndef QT_NO_TOOLTIP
         actionOpen->setToolTip(QApplication::translate("MainWindow", "Open an image file", 0));

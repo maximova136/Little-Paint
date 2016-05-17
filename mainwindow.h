@@ -4,12 +4,13 @@
 #include <QMainWindow>
 #include <QtGui>
 #include <QtCore>
-#include <QGraphicsScene>
+//#include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QtWidgets>
 #include <QWidget>
 #include <vector>
 
+#include "palette.h"
 #include "paintscene.h"
 
 enum BUTTON {ELLIPSE=0, RECTANGLE, TRIANGLE, LINE, CURVE, POLYGON};
@@ -41,10 +42,12 @@ private:
     QGraphicsEllipseItem *ellipse;
     QGraphicsRectItem *rectangle;
     std::vector <QPushButton*> allButtons;
+    Palette *palette;
+    QToolBar *mToolbar;
 
 
     QVBoxLayout *createToolsGroup();
-    void setSettings();
+    QHBoxLayout *createPalette();
 
    // void mousePressEvent(QGraphicsSceneMouseEvent *event);
    // void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
