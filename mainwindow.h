@@ -47,7 +47,6 @@ private:
 
 
     QVBoxLayout *createToolsGroup();
-    QHBoxLayout *createPalette();
 
    // void mousePressEvent(QGraphicsSceneMouseEvent *event);
    // void mouseMoveEvent(QGraphicsSceneMouseEvent * event);

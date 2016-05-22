@@ -64,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     palette = new Palette(mToolbar);
     addToolBar(Qt::BottomToolBarArea, palette);
 
+
     /*QVBoxLayout *vbox = new QVBoxLayout;
     vbox->addWidget(ui->menuBar);
     vbox->addWidget(ui->mainToolBar);
@@ -71,8 +72,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     for (unsigned int i = 0; i < allButtons.size(); i++)
     {
-        //connect(allButtons[i],SIGNAL(clicked(int)),this, SLOT(on_allButtons_clicked(int)));
-       // connect(allButtons[i],SIGNAL(clicked()),this, SLOT(on_allButtons_clicked()));
         connect(allButtons[i],SIGNAL(clicked()),this, SLOT(on_allButtons_clicked()));
         allButtons[i]->setCheckable(true);
     }
@@ -162,12 +161,6 @@ QVBoxLayout *MainWindow::createToolsGroup()
     return vbox;
 }
 
-QHBoxLayout* MainWindow::createPalette()
-{
-    QHBoxLayout* hbox = new QHBoxLayout;
-
-
-}
 
 /*
 void MainWindow::mousePressEvent(QGraphicsSceneMouseEvent *event)

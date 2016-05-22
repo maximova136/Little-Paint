@@ -19,13 +19,21 @@ public:
 signals:
 
 public slots:
+    void on_choose_clicked();
+    void on_butCol1_clicked();
+    void on_butCol2_clicked();
+    void on_colors_clicked();
+
 
 private:
     QColor col1, col2;
-
+    bool firstColActive;
     std::vector <QPushButton*> colors;
 
-    paletteButton *mColorButton;
+
+    QToolButton* choose;
+    paletteButton *butCol1, *butCol2;
+
     QToolBar *mToolBar;
 
     void initializeItems();

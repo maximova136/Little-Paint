@@ -13,21 +13,22 @@ public:
     ~paintScene();
 
 private:
-    QPointF previousPoint;      // Координаты предыдущей точки
-    QColor penColor; //границы
-    QColor brushColor; //заливка
+    QPointF previousPoint;      // Eiidacirnu ddlauaoule ni?ec
+    QColor penColor; //adricou
+    QColor brushColor; //crecaer
     QString drawableObj;
     QBrush brushStyle;
     QPen penStyle;
 
     QGraphicsItem* figure;
+    QGraphicsItemGroup* figureSelected;
     //QPen pen
     //QBrush brush
     // QBrush brushStyl -----> Qt::Brushstyle ????
-
+    bool newFigure;
 
 private:
-    // Для рисования используем события мыши
+    // Ae? dcniaric? cndieucole niaunc? eurc
     void mousePressEvent(QGraphicsSceneMouseEvent * event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);

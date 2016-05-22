@@ -4,6 +4,11 @@
 paintScene::paintScene(QObject *parent):QGraphicsScene(parent)
 {
     setSettings("Brush",Qt::black,QPen(Qt::SolidLine),Qt::white,QBrush(Qt::SolidPattern));
+    newFigure = true;
+
+//    parent_figure = new QGraphicsEllipseItem(QRect(0,0,40,40));
+//    figureSelected = new QGraphicsItemGroup;
+
 }
 
 paintScene::~paintScene()
@@ -13,6 +18,7 @@ paintScene::~paintScene()
 
 void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+
      if (drawableObj == "Brush")
      {
             // При нажатии кнопки мыши отрисовываем эллипс
@@ -23,20 +29,68 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
      }
      else if (drawableObj == "Ellipse")
      {
-         QBrush blueBrush(Qt::blue);
-         QPen blackPen(Qt::black);
-         //QGraphicsItem* ellipse;
-         blackPen.setWidth(3);
+         if (newFigure)
+         {
+             QBrush blueBrush(Qt::blue);
+             QPen blackPen(Qt::black);
+
+             //blackPen.setWidth(3);
+             QPolygonF point;
+             QGraphicsPolygonItem* points;
 
 
-         //ellipse = addEllipse(QRect(0,0,30,30),blackPen,blueBrush);
-         //ellipse->setPos(event->scenePos());
 
-         figure = addEllipse(QRect(0,0,40,40),blackPen,blueBrush);
-         figure->setPos(event->scenePos());
-         figure->setFlag(QGraphicsItem::ItemIsMovable);
-         figure->setFlag(QGraphicsItem::ItemIsSelectable);
+             //ellipse = addEllipse(QRect(0,0,30,30),blackPen,blueBrush);
+             //ellipse->setPos(event->scenePos());
 
+             //figure = new QGraphicsEllipseItem();
+             //figure = QGraphicsEllipseItem(QRect(0,0,40,40),blackPen,blueBrush);
+                figure = new QGraphicsEllipseItem(QRectF(0,0,40,40));
+             // figure = new QGraphicsEllipseItem(QRect(0,0,40,40),parent_figure);
+             qDebug()<<figure->parentItem();
+             qDebug()<<figure->childItems();
+
+             //figure->setPos(event->scenePos());
+             figure->setFlag(QGraphicsItem::ItemIsMovable);
+             figure->setFlag(QGraphicsItem::ItemIsSelectable);
+
+             qDebug()<<figure->pos();
+             qDebug()<<figure->boundingRect();
+
+             //!!!!!!!!!!! скорректировать для разной толщины контура фигуры. также для прозрачного
+
+             point<<QPointF(figure->pos().x(),figure->pos().y())
+                 <<QPointF(figure->pos().x()+figure->boundingRect().width(),figure->pos().y())
+                <<QPointF(figure->pos().x()+figure->boundingRect().width(),figure->pos().y()+figure->boundingRect().height())
+               <<QPointF(figure->pos().x(),figure->pos().y()+figure->boundingRect().height());
+             //addPolygon(point,QPen(Qt::SolidLine),QBrush(Qt::magenta,Qt::BDiagPattern));
+
+             blackPen.setColor(Qt::darkGray);
+             blackPen.setStyle(Qt::DashLine);
+             points = new QGraphicsPolygonItem(point);
+             points->setPen(blackPen);
+
+
+             //figureSelected = new QGraphicsItemGroup(parent_figure);
+             figureSelected = new QGraphicsItemGroup;
+
+
+             figureSelected->addToGroup(points);
+             figureSelected->addToGroup(figure);
+
+             figureSelected->setX(event->scenePos().rx()-figure->boundingRect().width()/2);
+             figureSelected->setY(event->scenePos().ry()-figure->boundingRect().height()/2);
+
+             addItem(figureSelected);
+
+         }
+         else
+         {
+
+             newFigure = true;
+             figure = new QGraphicsEllipseItem;
+
+         }
 
 
         // ellipse->setFlag(QGraphicsItem::ItemIsMovable);
@@ -61,16 +115,45 @@ void paintScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else if (drawableObj == "Ellipse")
     {
-        figure->setX(event->scenePos().rx());
-        figure->setY(event->scenePos().ry());
+        if (newFigure)
+        {
+            figureSelected->setX(event->scenePos().rx()- figure->boundingRect().width()/2);
+            figureSelected->setY(event->scenePos().ry()- figure->boundingRect().height()/2);
+        }
+        else
+        {
+
+        }
     }
     qDebug()<<"mouse moved";
 }
 
 void paintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (drawableObj == "Brush")
+    {
 
 
+    }
+    else if (drawableObj == "Ellipse")
+    {
+        if (newFigure)
+        {
+            qDebug()<<figureSelected->childItems();
+            //removeItem(figureSelected->childItems());
+            addItem(figure);
+
+        //figure->show();
+        //removeItem(figure);
+        //removeItem(figureSelected);
+            newFigure = false;
+            figureSelected = new QGraphicsItemGroup;
+        }
+        else
+        {
+
+        }
+    }
     qDebug()<<"mouse released";
 }
 

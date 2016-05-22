@@ -1,6 +1,7 @@
 #include "palettebutton.h"
 
 #include <QMouseEvent>
+#include <QDebug>
 
 paletteButton::paletteButton(const QColor &color)
 {
@@ -11,6 +12,8 @@ paletteButton::paletteButton(const QColor &color)
     pixmap.fill(color);
     setIcon(pixmap);
     setStatusTip(color.name());
+
+
 }
 
 void paletteButton::mousePressEvent(QMouseEvent *event)
@@ -21,4 +24,19 @@ void paletteButton::mousePressEvent(QMouseEvent *event)
         DataSingleton::Instance()->setSecondaryColor(mColor);
 */
     emit colorPicked();
+}
+
+void paletteButton::changeColor(QColor col)
+{
+    mColor = col;
+    QPixmap pixmap(20, 20);
+    pixmap.fill(col);
+    setIcon(pixmap);
+    setStatusTip(col.name());
+}
+
+
+QColor paletteButton::getColor()
+{
+    return mColor;
 }
