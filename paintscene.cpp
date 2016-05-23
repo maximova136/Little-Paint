@@ -54,6 +54,7 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
              figure->setFlag(QGraphicsItem::ItemIsMovable);
              figure->setFlag(QGraphicsItem::ItemIsSelectable);
 
+
              qDebug()<<figure->pos();
              qDebug()<<figure->boundingRect();
 

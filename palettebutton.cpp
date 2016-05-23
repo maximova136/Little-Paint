@@ -23,7 +23,9 @@ void paletteButton::mousePressEvent(QMouseEvent *event)
     else if(event->button() == Qt::RightButton)
         DataSingleton::Instance()->setSecondaryColor(mColor);
 */
-    emit colorPicked();
+    //emit colorPicked();
+    //emit colortryed(mColor);
+    emit colorPicked(mColor);
 }
 
 void paletteButton::changeColor(QColor col)

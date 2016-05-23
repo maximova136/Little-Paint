@@ -11,7 +11,8 @@ public:
     QColor getColor();
 
 signals:
-    void colorPicked();
+    //void colorPicked();
+    void colorPicked(QColor);
 
 
 public slots:

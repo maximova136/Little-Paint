@@ -18,7 +18,6 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
-#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
@@ -33,7 +32,6 @@ public:
     QAction *actionSave;
     QWidget *centralWidget;
     QGraphicsView *graphicsView;
-    QPushButton *pushButton;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QToolBar *mainToolBar;
@@ -43,8 +41,8 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(701, 454);
-        MainWindow->setMinimumSize(QSize(701, 454));
+        MainWindow->resize(632, 400);
+        MainWindow->setMinimumSize(QSize(600, 400));
         actionNew = new QAction(MainWindow);
         actionNew->setObjectName(QStringLiteral("actionNew"));
         actionOpen = new QAction(MainWindow);
@@ -55,15 +53,11 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         graphicsView = new QGraphicsView(centralWidget);
         graphicsView->setObjectName(QStringLiteral("graphicsView"));
-        graphicsView->setGeometry(QRect(220, 140, 451, 261));
-        graphicsView->setMaximumSize(QSize(451, 271));
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(450, 20, 21, 23));
+        graphicsView->setGeometry(QRect(160, 70, 451, 261));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 701, 21));
+        menuBar->setGeometry(QRect(0, 0, 632, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         MainWindow->setMenuBar(menuBar);
@@ -94,7 +88,6 @@ public:
         actionOpen->setToolTip(QApplication::translate("MainWindow", "Open an image file", 0));
 #endif // QT_NO_TOOLTIP
         actionSave->setText(QApplication::translate("MainWindow", "Save", 0));
-        pushButton->setText(QApplication::translate("MainWindow", "Circle", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi
 

@@ -20,10 +20,9 @@ signals:
 
 public slots:
     void on_choose_clicked();
-    void on_butCol1_clicked();
-    void on_butCol2_clicked();
-    void on_colors_clicked();
-
+    void on_butCol1_clicked(QColor);
+    void on_butCol2_clicked(QColor);
+    void on_colors_clicked(QColor);
 
 private:
     QColor col1, col2;

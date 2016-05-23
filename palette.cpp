@@ -20,69 +20,79 @@ void Palette::initializeItems()
     butCol1 = new paletteButton(Qt::black);
     butCol1->setCheckable(true);
     butCol1->setChecked(true);
-    connect(butCol1,SIGNAL(colorPicked()),this, SLOT(on_butCol1_clicked()));
+    connect(butCol1,SIGNAL(colorPicked(QColor)),this, SLOT(on_butCol1_clicked(QColor)));
     addWidget(butCol1);
 
     butCol2 = new paletteButton(Qt::white);
     butCol2->setCheckable(true);
     butCol2->setChecked(false);
-    connect(butCol2,SIGNAL(colorPicked()),this, SLOT(on_butCol2_clicked()));
+    connect(butCol2,SIGNAL(colorPicked(QColor)),this, SLOT(on_butCol2_clicked(QColor)));
     addWidget(butCol2);
 
     addSeparator();
     addSeparator();
 
+
     mColorButton = new paletteButton(Qt::red);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::darkRed);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::green);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::darkGreen);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::blue);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::darkBlue);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::cyan);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::darkCyan);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::magenta);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::darkMagenta);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::yellow);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::darkYellow);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
 
     mColorButton = new paletteButton(Qt::gray);
-    connect(mColorButton,SIGNAL(colorPicked()),this, SLOT(on_colors_clicked()));
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
     addWidget(mColorButton);
+
+    mColorButton = new paletteButton(Qt::white);
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
+    addWidget(mColorButton);
+
+    mColorButton = new paletteButton(Qt::black);
+    connect(mColorButton, SIGNAL(colorPicked(QColor)),this,SLOT(on_colors_clicked(QColor)));
+    addWidget(mColorButton);
+
     addSeparator();
 
     choose = new QToolButton();
@@ -118,7 +128,7 @@ void Palette::on_choose_clicked()
 }
 
 
-void Palette::on_butCol1_clicked()
+void Palette::on_butCol1_clicked(QColor)
 {
     qDebug()<<"but1";
     if (!firstColActive)
@@ -129,7 +139,7 @@ void Palette::on_butCol1_clicked()
     }
 }
 
-void Palette::on_butCol2_clicked()
+void Palette::on_butCol2_clicked(QColor)
 {
     qDebug()<<"but2";
     if (firstColActive)
@@ -140,19 +150,21 @@ void Palette::on_butCol2_clicked()
     }
 }
 
-void Palette::on_colors_clicked()
+void Palette::on_colors_clicked(QColor color)
 {
 
     qDebug()<< sender();
 
     if (firstColActive)
     {
-        //butCol1->changeColor();
-        //col1 = color;
+        butCol1->changeColor(color);
+        col1 = color;
     }
     else
     {
-        //butCol2->changeColor(color);
-        //col2 = color;
+        butCol2->changeColor(color);
+        col2 = color;
     }
 }
+
+

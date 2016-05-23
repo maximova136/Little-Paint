@@ -217,12 +217,9 @@ pip-log.txt
 
 
 *.[oa]
-*.exe
-*.o
-debug/paintscene.o
+
+*.bc10586
+blaba.pro.user.23c8563
+*.user
+object_script.blaba.Release
 *.Debug
-*.Release
-*.Debug
-Makefile.Debug
-*.exe
-debug/main.o
