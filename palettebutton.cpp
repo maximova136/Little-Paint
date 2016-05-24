@@ -12,8 +12,6 @@ paletteButton::paletteButton(const QColor &color)
     pixmap.fill(color);
     setIcon(pixmap);
     setStatusTip(color.name());
-
-
 }
 
 void paletteButton::mousePressEvent(QMouseEvent *event)

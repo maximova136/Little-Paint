@@ -31,6 +31,10 @@ public:
 private slots:
     //void on_Buttons_clicked(int);
     void on_allButtons_clicked();
+    ///this is not used
+    void penWidthChanged(int);
+
+public slots:
 
 signals:
     void clicked(int x);
@@ -44,7 +48,8 @@ private:
     std::vector <QPushButton*> allButtons;
     Palette *palette;
     QToolBar *mToolbar;
-
+    QSlider *slider;
+    QLabel* label;
 
     QVBoxLayout *createToolsGroup();
 

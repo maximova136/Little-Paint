@@ -6,15 +6,10 @@ paintArea::paintArea(QWidget *parent) : QWidget(parent)
     modified = false;
     scribbling = false;
     myPenWidth = 1;
-    myPenColor = Qt::blue;
 
     setSettings("Brush",Qt::black,QPen(Qt::SolidLine),Qt::white,QBrush(Qt::SolidPattern));
-    //newFigure = true;
-    firstColActive = true;
-//    penColor = Qt::black;
-//    penStyle = QPen(Qt::SolidLine);
 
-    //qDebug()<<"set settings"<<drawableObj;
+    firstColActive = true;
 }
 
 
@@ -37,6 +32,17 @@ void paintArea::changeColors(QColor col1, QColor col2)
     //brushColor = col2;
     qDebug()<<"slot";
 }
+
+void paintArea::changeWidth(int width)
+{
+    setPen(width);
+}
+
+void paintArea::setPen( int wid)
+{
+    pen = QPen(QBrush(penColor),wid);
+}
+
 void paintArea::firstColorActive(bool first)
 {
     if (first)
@@ -149,11 +155,11 @@ void paintArea::drawLineTo(const QPoint &endPoint)
     painter.setRenderHint(QPainter::Antialiasing, true);
     if (button == Qt::LeftButton)
     {
-        painter.setPen(QPen(penColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter.setPen(QPen(penColor, pen.width(), Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     }
     else
     {
-        painter.setPen(QPen(brushColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter.setPen(QPen(brushColor, pen.width(), Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     }
 
     painter.drawLine(lastPoint, endPoint);
@@ -208,14 +214,13 @@ void paintArea::resizeImage(QImage *image, const QSize &newSize)
 }
 
 
-void paintArea::setSettings(QString _drawableObj, QColor _penColor, QPen _penStyle, QColor _brushColor, QBrush _brushStyle)
+void paintArea::setSettings(QString _drawableObj, QColor _penColor, QPen _pen, QColor _brushColor, QBrush _brush)
 {
     drawableObj = _drawableObj;
-    //penColor = _penColor;
-    penStyle = _penStyle;
-    //brushColor = _brushColor;
+
+    pen = _pen;
     setColors(_penColor,_brushColor);
-    brushStyle = _brushStyle;
+    brush = _brush;
     qDebug()<<"set settings"<<drawableObj;
 }
 

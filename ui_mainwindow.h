@@ -29,9 +29,11 @@ public:
     QAction *actionNew;
     QAction *actionOpen;
     QAction *actionSave;
+    QAction *actionClear;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QMenu *menuFile;
+    QMenu *menuEdit;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -47,6 +49,8 @@ public:
         actionOpen->setObjectName(QStringLiteral("actionOpen"));
         actionSave = new QAction(MainWindow);
         actionSave->setObjectName(QStringLiteral("actionSave"));
+        actionClear = new QAction(MainWindow);
+        actionClear->setObjectName(QStringLiteral("actionClear"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         MainWindow->setCentralWidget(centralWidget);
@@ -55,6 +59,8 @@ public:
         menuBar->setGeometry(QRect(0, 0, 632, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
+        menuEdit = new QMenu(menuBar);
+        menuEdit->setObjectName(QStringLiteral("menuEdit"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -64,9 +70,11 @@ public:
         MainWindow->setStatusBar(statusBar);
 
         menuBar->addAction(menuFile->menuAction());
+        menuBar->addAction(menuEdit->menuAction());
         menuFile->addAction(actionNew);
         menuFile->addAction(actionOpen);
         menuFile->addAction(actionSave);
+        menuEdit->addAction(actionClear);
 
         retranslateUi(MainWindow);
 
@@ -83,7 +91,9 @@ public:
         actionOpen->setToolTip(QApplication::translate("MainWindow", "Open an image file", 0));
 #endif // QT_NO_TOOLTIP
         actionSave->setText(QApplication::translate("MainWindow", "Save", 0));
+        actionClear->setText(QApplication::translate("MainWindow", "Clear", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
+        menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0));
     } // retranslateUi
 
 };

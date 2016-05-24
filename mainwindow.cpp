@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <QDebug>
+#include <QtCore>
 //#include "paintarea.h"
 //#include "palette.h"
 MainWindow::MainWindow(QWidget *parent) :
@@ -51,16 +52,32 @@ MainWindow::MainWindow(QWidget *parent) :
     allButtons.push_back(fillButton);
     allButtons.push_back(textButton);
 
+    slider = new QSlider(Qt::Vertical);
+    label = new QLabel("1");
+    label->setMaximumWidth(15);
+    slider->setRange(1,8);
+    slider->setValue(1);
+    slider->setTickInterval(1);
+    slider->setMaximumWidth(30);
+    slider->setTickPosition(QSlider::TicksLeft);
 
+    connect(slider, SIGNAL(valueChanged(int)),label,SLOT(setNum(int)));
+    connect(slider, SIGNAL(valueChanged(int)),scene, SLOT(changeWidth(int)));
+    //connect(slider,SIGNAL(valueChanged(int)),this,SLOT(penWidthChanged(int)));
 
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->addLayout(createToolsGroup());
+    QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->addLayout(createToolsGroup());
+    QHBoxLayout *hboxSlider = new QHBoxLayout;
+    hboxSlider->addWidget(slider);
+    hboxSlider->addWidget(label);
+    vbox->addLayout(hboxSlider);
+    vbox->addStretch(30);
+    hbox->addLayout(vbox);
+    //hbox->addLayout(createToolsGroup());
     ///hbox->addWidget(ui->graphicsView);
     hbox->addWidget(scene);
 
-
-    //palette = new Palette();
-    //hbox->addWidget(palette);
     palette = new Palette(mToolbar);
     addToolBar(Qt::BottomToolBarArea, palette);
 
@@ -81,7 +98,6 @@ MainWindow::MainWindow(QWidget *parent) :
     pShadow->setXOffset(2);
     pShadow->setYOffset(2);
     allButtons[0]->setGraphicsEffect(pShadow);
-    //this->scene();
 
 
     ui->centralWidget->setLayout(hbox);
@@ -91,11 +107,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(palette, SIGNAL(colorsChanged(QColor,QColor)),scene, SLOT(changeColors(QColor,QColor)));
     connect(palette, SIGNAL(firstColorIsActive(bool)),scene, SLOT(firstColorActive(bool)));
 
-
-
-
-    //ui->centralWidget->setLayout(createToolsGroup());
-
+    connect(ui->actionClear, SIGNAL(triggered()), scene, SLOT(clearImage()));
 
 }
 
@@ -103,27 +115,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
-
-//void MainWindow::on_pushButton_clicked()
-//{
-//    QBrush blueBrush(Qt::blue);
-//    QPen blackPen(Qt::black);
-
-//    blackPen.setWidth(3);
-
-//    /*this->ellipse = this->scene->addEllipse(0,0,30,30,blackPen, blueBrush);
-
-//    this->ellipse->setFlag(QGraphicsItem::ItemIsMovable);
-//    this->ellipse->setFlag(QGraphicsItem::ItemIsSelectable);*/
-
-//    //QString path = QFileDialog::getOpenFileName(0,tr("Укажите файл базы данных"),QDir::homePath(), QObject::tr("Файл SQLite (*.db);;Все файлы (*.*)"));
-//    //qDebug()<<path;
-//    QColor col = QColorDialog::getColor(Qt::blue);
-//    qDebug()<<col;
-//}
-
 
 
 void MainWindow::on_allButtons_clicked()
@@ -142,15 +133,11 @@ void MainWindow::on_allButtons_clicked()
     pShadow->setYOffset(2);
     currentButton->setGraphicsEffect(pShadow);
     scene->setSettings(currentButton->objectName(),palette->getCol1(),Qt::DotLine,palette->getCol2(),Qt::BDiagPattern);
-
-
-
 }
 
 
 QVBoxLayout *MainWindow::createToolsGroup()
 {
-
     QVBoxLayout *vbox = new QVBoxLayout;
 
     for (unsigned int i = 0; i < allButtons.size();i++)
@@ -159,9 +146,37 @@ QVBoxLayout *MainWindow::createToolsGroup()
         vbox->addWidget(allButtons[i]);
         vbox->addStretch(-1);
     }
-    vbox->addStretch(10);
+    vbox->addSpacing(15);
 
     return vbox;
 }
 
 
+void MainWindow::penWidthChanged(int width)
+{
+    qDebug()<<width;
+    //QPixmap myPix(QSize(10,10) );
+    QPixmap myPix(10,10);
+    QPainter painter(&myPix);
+
+    //QPainter p(this);
+    //p.setBrush(QPixmap("/media/data/shot0015.jpg"));
+    //p.drawEllipse(rect());
+
+    painter.setBrush(Qt::black);
+    //painter.setPen(Qt::black);
+
+    //painter.drawEllipse(5,5,width,width);
+    painter.drawArc(QRect(0,0,5,5),0,360*16);
+
+
+
+   // label = new QLabel(width, this);
+    //label = new QLabel(QString(width),this);
+    //label->setText(QString::);
+    qDebug()<<label->text();
+    //qDebug()<<myPix;
+    label->setPixmap(myPix);
+    //label->setPicture(myPix.toImage());
+
+}

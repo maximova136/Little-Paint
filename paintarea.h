@@ -15,19 +15,20 @@ public:
     //    void setPenWidth(int newWidth);
 
     bool isModified() const { return modified; }
-    QColor getPenColor() const { return myPenColor; }
+    QColor getPenColor() const { return penColor; }
     int penWidth() const { return myPenWidth; }
     void setSettings(QString _drawableObj, QColor _penColor,QPen _penStyle, QColor _brushColor,  QBrush _brushStyle);
     void setColors(QColor col1, QColor col2);
+    void setPen(int wid);
 
 signals:
 
 public slots:
     void clearImage();
-    //void changeColor();
     void changeColors(QColor, QColor);
+    void changeWidth(int);
     void firstColorActive(bool);
-    //void print();
+
 
 protected:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
@@ -42,14 +43,13 @@ private:
     //don't use it \/ //
     void drawLineTo(const QPoint &endPoint, const Qt::MouseButton &button);
     void resizeImage(QImage *image, const QSize &newSize);
-    //don't use it \/ //
+    //don't use on of it \/ //  (first maybe)
     void fillTool(QPoint pixel, QRgb Col);
     void fillToolWork(int x, int y, QRgb oldColor, QRgb newColor);
 
     bool modified;
     bool scribbling;
     int myPenWidth;
-    QColor myPenColor;
     QImage image;
     QPoint lastPoint;
 
@@ -58,8 +58,9 @@ private:
     QColor penColor;
     QColor brushColor;
     QString drawableObj;
-    QBrush brushStyle;
-    QPen penStyle;
+
+    QBrush brush;
+    QPen pen;
     bool firstColActive;
     Qt::MouseButton button;
 
