@@ -19,6 +19,7 @@ private:
     QString drawableObj;
     QBrush brushStyle;
     QPen penStyle;
+    bool firstColActive;
 
     QGraphicsItem* figure;
     QGraphicsItemGroup* figureSelected;

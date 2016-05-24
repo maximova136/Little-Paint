@@ -113,6 +113,7 @@ void Palette::on_choose_clicked()
         {
             butCol1->changeColor(color);
             col1 = color;
+            emit colorsChanged(col1,col2);
         }
     }
     else
@@ -122,6 +123,7 @@ void Palette::on_choose_clicked()
         {
             butCol2->changeColor(color);
             col2 = color;
+            emit colorsChanged(col1,col2);
         }
 
     }
@@ -136,6 +138,7 @@ void Palette::on_butCol1_clicked(QColor)
         butCol1->setChecked(true);
         butCol2->setChecked(false);
         firstColActive = true;
+        emit firstColorIsActive(true);
     }
 }
 
@@ -147,6 +150,7 @@ void Palette::on_butCol2_clicked(QColor)
         butCol2->setChecked(true);
         butCol1->setChecked(false);
         firstColActive = false;
+        emit firstColorIsActive(false);
     }
 }
 
@@ -165,6 +169,23 @@ void Palette::on_colors_clicked(QColor color)
         butCol2->changeColor(color);
         col2 = color;
     }
+    emit colorsChanged(col1,col2);
+
 }
 
+bool Palette::isFirstColActive()
+{
+    return firstColActive;
+}
+
+
+QColor Palette::getCol1()
+{
+    return col1;
+}
+
+QColor Palette::getCol2()
+{
+    return col2;
+}
 
