@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QPainter>
-
+#include <QtWidgets>
 class paintArea : public QWidget
 {
     Q_OBJECT
@@ -39,7 +39,12 @@ protected:
 
 private:
     void drawLineTo(const QPoint &endPoint);
+    //don't use it \/ //
+    void drawLineTo(const QPoint &endPoint, const Qt::MouseButton &button);
     void resizeImage(QImage *image, const QSize &newSize);
+    //don't use it \/ //
+    void fillTool(QPoint pixel, QRgb Col);
+    void fillToolWork(int x, int y, QRgb oldColor, QRgb newColor);
 
     bool modified;
     bool scribbling;
@@ -56,6 +61,7 @@ private:
     QBrush brushStyle;
     QPen penStyle;
     bool firstColActive;
+    Qt::MouseButton button;
 
 };
 
