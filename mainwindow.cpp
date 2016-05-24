@@ -5,23 +5,19 @@
 #include <vector>
 #include <iostream>
 #include <QDebug>
-
-#include "palette.h"
+//#include "paintarea.h"
+//#include "palette.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-//    scene = new QGraphicsScene(this);
-//    scene->setSceneRect(0,0,50,50);
-//    ui->graphicsView->setScene(scene);
-//    ui->graphicsView->setSceneRect(0,0,50,50);
+    ///scene = new paintScene();
+    ///scene->setSceneRect(0,0, ui->graphicsView->width()-40, ui->graphicsView->height()-30);
+    ///ui->graphicsView->setScene(scene);
 
-    scene = new paintScene();
-    scene->setSceneRect(0,0, ui->graphicsView->width()-40, ui->graphicsView->height()-30);
-    ui->graphicsView->setScene(scene);
-
+    scene = new paintArea;
 
     QPushButton *ellipseButton = new QPushButton(tr("&Ellipse"));
     ellipseButton->setObjectName(tr("Ellipse"));
@@ -41,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent) :
     brushButton->setObjectName(tr("Brush"));
     QPushButton *textButton = new QPushButton(tr("&Text"));
     textButton->setObjectName(tr("Text"));
+    QPushButton *fillButton = new QPushButton(tr("&Fill"));
+    fillButton->setObjectName(tr("Fill"));
 
     allButtons.clear();
     allButtons.push_back(brushButton);
@@ -50,13 +48,15 @@ MainWindow::MainWindow(QWidget *parent) :
     allButtons.push_back(lineButton);
     allButtons.push_back(curveButton);
     //allButtons.push_back(polygonButton);
+    allButtons.push_back(fillButton);
     allButtons.push_back(textButton);
 
 
 
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addLayout(createToolsGroup());
-    hbox->addWidget(ui->graphicsView);
+    ///hbox->addWidget(ui->graphicsView);
+    hbox->addWidget(scene);
 
 
     //palette = new Palette();
@@ -86,7 +86,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->centralWidget->setLayout(hbox);
     ui->mainToolBar->setWhatsThis("i'm future palette");
+    ui->mainToolBar->close();
 
+    connect(palette, SIGNAL(colorsChanged(QColor,QColor)),scene, SLOT(changeColors(QColor,QColor)));
+    connect(palette, SIGNAL(firstColorIsActive(bool)),scene, SLOT(firstColorActive(bool)));
 
 
 
@@ -138,7 +141,10 @@ void MainWindow::on_allButtons_clicked()
     pShadow->setXOffset(2);
     pShadow->setYOffset(2);
     currentButton->setGraphicsEffect(pShadow);
-    this->scene->setSettings(currentButton->objectName(),QColor(Qt::darkBlue),Qt::DotLine,QColor(Qt::yellow),Qt::BDiagPattern);
+    scene->setSettings(currentButton->objectName(),palette->getCol1(),Qt::DotLine,palette->getCol2(),Qt::BDiagPattern);
+
+
+
 }
 
 
@@ -149,6 +155,7 @@ QVBoxLayout *MainWindow::createToolsGroup()
 
     for (unsigned int i = 0; i < allButtons.size();i++)
     {
+        allButtons[i]->setMaximumWidth(50);
         vbox->addWidget(allButtons[i]);
         vbox->addStretch(-1);
     }

@@ -15,8 +15,12 @@ public:
     void setColors(QColor col1_, QColor col2_);
     QColor getCol1();
     QColor getCol2();
+    bool isFirstColActive();
 
 signals:
+    //void colorChanged();
+    void colorsChanged(QColor, QColor);
+    void firstColorIsActive(bool);
 
 public slots:
     void on_choose_clicked();

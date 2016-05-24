@@ -11,7 +11,7 @@ public:
     QColor getColor();
 
 signals:
-    //void colorPicked();
+
     void colorPicked(QColor);
 
 

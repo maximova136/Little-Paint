@@ -19,18 +19,7 @@
   <property name="windowTitle">
    <string>LiPa (Little Paint)</string>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <widget class="QGraphicsView" name="graphicsView">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>70</y>
-      <width>451</width>
-      <height>261</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
+  <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>

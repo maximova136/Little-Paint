@@ -5,6 +5,7 @@ paintScene::paintScene(QObject *parent):QGraphicsScene(parent)
 {
     setSettings("Brush",Qt::black,QPen(Qt::SolidLine),Qt::white,QBrush(Qt::SolidPattern));
     newFigure = true;
+    firstColActive = true;
 
 //    parent_figure = new QGraphicsEllipseItem(QRect(0,0,40,40));
 //    figureSelected = new QGraphicsItemGroup;
@@ -97,6 +98,22 @@ void paintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         // ellipse->setFlag(QGraphicsItem::ItemIsMovable);
         // ellipse->setFlag(QGraphicsItem::ItemIsSelectable);
 
+     }
+     else if (drawableObj == "Fill")
+     {
+         QPointF point = event->pos();
+         QColor oldColor, newColor;
+
+         if (firstColActive)
+         {
+             newColor = penColor;
+         }
+         else
+         {
+             newColor = brushColor;
+         }
+         qDebug()<<oldColor;
+         qDebug()<<newColor;
      }
 
      qDebug()<<"mouse pressed";

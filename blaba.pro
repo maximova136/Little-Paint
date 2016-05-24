@@ -17,14 +17,18 @@ SOURCES += main.cpp\
     abstractfigure.cpp \
     paintscene.cpp \
     palette.cpp \
-    palettebutton.cpp
+    palettebutton.cpp \
+    paintarea.cpp \
+
+   # debug/moc_palette.cpp
 
 
 HEADERS  += mainwindow.h \
     abstractfigure.h \
     paintscene.h \
     palette.h \
-    palettebutton.h
+    palettebutton.h \
+    paintarea.h
 
 
 FORMS    += mainwindow.ui
