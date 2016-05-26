@@ -6,6 +6,7 @@ paintScene::paintScene(QObject *parent):QGraphicsScene(parent)
     setSettings("Brush",Qt::black,QPen(Qt::SolidLine),Qt::white,QBrush(Qt::SolidPattern));
     newFigure = true;
     firstColActive = true;
+//    setMouseTracking(true);
 
 //    parent_figure = new QGraphicsEllipseItem(QRect(0,0,40,40));
 //    figureSelected = new QGraphicsItemGroup;

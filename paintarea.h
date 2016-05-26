@@ -20,7 +20,7 @@ public:
     Qt::PenStyle getPenStyle() {return penStyle;}
     Qt::BrushStyle getBrushStyle() const {return brushStyle;}
     void setSettings(QString _drawableObj, QColor _penColor,QPen _penStyle, QColor _brushColor,  QBrush _brushStyle);
-    void setSettings(QString _drawableObj, QColor _penColor,  int width, QColor _brushColor, Qt::PenStyle _penStyle = Qt::SolidLine, Qt::BrushStyle _brushStyle = Qt::NoBrush);
+    void setSettings(QString _drawableObj, QColor _penColor,  int width, QColor _brushColor, Qt::PenStyle _penStyle = Qt::SolidLine, Qt::BrushStyle _brushStyle = Qt::SolidPattern);
     void setColors(QColor col1, QColor col2);
     void setPen(int wid);
     void setPen(Qt::PenStyle _style = Qt::SolidLine);
@@ -36,7 +36,10 @@ public slots:
     void clearImage();
     void changeColors(QColor, QColor);
     void changeWidth(int);
+    void changePenStyle(QString);
+    void changeBrushStyle(QString);
     void firstColorActive(bool);
+    void shiftActive(bool);
 
 
 protected:
@@ -45,6 +48,9 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    //void keyPressEvent(QKeyEvent *event);
+
+    void paint(const QPoint &endPoint);
 
 
 private:
@@ -59,6 +65,8 @@ private:
 
     bool modified;
     bool scribbling;
+    bool shiftOn;
+
     int myPenWidth;
     QImage image;
     //QLabel image;

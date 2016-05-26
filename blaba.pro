@@ -20,8 +20,6 @@ SOURCES += main.cpp\
     palettebutton.cpp \
     paintarea.cpp \
 
-   # debug/moc_palette.cpp
-
 
 HEADERS  += mainwindow.h \
     abstractfigure.h \

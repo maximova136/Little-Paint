@@ -38,6 +38,7 @@ public slots:
 
 signals:
     void clicked(int x);
+    void ShiftOn(bool);
 
 private:
     Ui::MainWindow *ui;
@@ -52,10 +53,13 @@ private:
     Palette *palette;
     QToolBar *mToolbar;
     QSlider *slider;
+    QComboBox *penPattern;
+    QComboBox *brushPattern;
     QLabel* label;
 
     QVBoxLayout *createToolsGroup();
-
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
    // void mousePressEvent(QGraphicsSceneMouseEvent *event);
    // void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
 

@@ -9,7 +9,6 @@ Palette::Palette(QToolBar *toolBar) : QToolBar(tr("Colors"))
     initializeItems();
     firstColActive = true;
 
-
 }
 
 void Palette::initializeItems()
