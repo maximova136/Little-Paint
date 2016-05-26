@@ -21,37 +21,75 @@ MainWindow::MainWindow(QWidget *parent) :
 
     scene = new paintArea();
 
-    QPushButton *ellipseButton = new QPushButton(tr("&Ellipse"));
+//    QPushButton *ellipseButton = new QPushButton(tr("&Ellipse"));
+    QPushButton *ellipseButton = new QPushButton();
     ellipseButton->setObjectName(tr("Ellipse"));
+    ellipseButton->setIcon(QIcon("media/ellipse.png"));
+    ellipseButton->setIconSize(QSize(25,25));
 
-    QPushButton *rectangleButton = new QPushButton(tr("&Rectangle"));
+//    QPushButton *rectangleButton = new QPushButton(tr("&Rectangle"));
+    QPushButton *rectangleButton = new QPushButton();
     rectangleButton->setObjectName(tr("Rectangle"));
-    QPushButton *triangleButton = new QPushButton(tr("&Triangle"));
-    triangleButton->setObjectName(tr("Triangle"));
-    QPushButton *lineButton = new QPushButton(tr("&Line"));
-    lineButton->setObjectName(tr("Line"));
-    QPushButton *curveButton = new QPushButton(tr("&Curve"));
-    curveButton->setObjectName(tr("Curve"));
-    //QPushButton *polygonButton = new QPushButton(tr("&Polygon"));
-    //polygonButton->setObjectName(tr("Polygon"));
+    rectangleButton->setIcon(QIcon("media/rectangle.png"));
+    rectangleButton->setIconSize(QSize(25,25));
 
-    QPushButton *brushButton = new QPushButton(tr("&Brush"));
+    //QPushButton *triangleButton = new QPushButton(tr("&Triangle"));
+    QPushButton *triangleButton = new QPushButton();
+    triangleButton->setObjectName(tr("Triangle"));
+    triangleButton->setIcon(QIcon("media/triangle.png"));
+    triangleButton->setIconSize(QSize(24,18));
+
+//    QPushButton *lineButton = new QPushButton(tr("&Line"));
+    QPushButton *lineButton = new QPushButton();
+    lineButton->setObjectName(tr("Line"));
+    lineButton->setIcon(QIcon("media/line.png"));
+    lineButton->setIconSize(QSize(25,25));
+
+//    QPushButton *curveButton = new QPushButton(tr("&Curve"));
+    QPushButton *curveButton = new QPushButton();
+    curveButton->setObjectName(tr("Curve"));
+    curveButton->setIcon(QIcon("media/curve.png"));
+    curveButton->setIconSize(QSize(15,15));
+
+//    QPushButton *brushButton = new QPushButton(tr("&Brush"));
+    QPushButton *brushButton = new QPushButton();
     brushButton->setObjectName(tr("Brush"));
-    QPushButton *textButton = new QPushButton(tr("&Text"));
+    brushButton->setIcon(QIcon("media/pencil.png"));
+    brushButton->setIconSize(QSize(23,23));
+
+//    QPushButton *textButton = new QPushButton(tr("&Text"));
+    QPushButton *textButton = new QPushButton();
     textButton->setObjectName(tr("Text"));
-    QPushButton *fillButton = new QPushButton(tr("&Fill"));
+    textButton->setIcon(QIcon("media/text.png"));
+    textButton->setIconSize(QSize(25,25));
+
+//    QPushButton *fillButton = new QPushButton(tr("&Fill"));
+    QPushButton *fillButton = new QPushButton();
     fillButton->setObjectName(tr("Fill"));
+    fillButton->setIcon(QIcon("media/fill.png"));
+    fillButton->setIconSize(QSize(25,25));
+
+    QPushButton *eraserButton = new QPushButton();
+    eraserButton->setObjectName(tr("Eraser"));
+    eraserButton->setIcon(QIcon("media/eraser.png"));
+    eraserButton->setIconSize(QSize(25,25));
+
+    QPushButton *pipetteButton = new QPushButton();
+    pipetteButton->setObjectName("Pipette");
+    pipetteButton->setIcon(QIcon("media/pipette.png"));
+    pipetteButton->setIconSize(QSize(20,20));
 
     allButtons.clear();
     allButtons.push_back(brushButton);
     allButtons.push_back(ellipseButton);
     allButtons.push_back(rectangleButton);
     allButtons.push_back(triangleButton);
+    allButtons.push_back(fillButton);
+    allButtons.push_back(pipetteButton);
     allButtons.push_back(lineButton);
     allButtons.push_back(curveButton);
-    //allButtons.push_back(polygonButton);
-    allButtons.push_back(fillButton);
     allButtons.push_back(textButton);
+    allButtons.push_back(eraserButton);
 
     slider = new QSlider(Qt::Vertical);
     label = new QLabel("1");
@@ -113,6 +151,7 @@ MainWindow::MainWindow(QWidget *parent) :
     painter.end();
 
     penPattern->setMaximumWidth(40);
+
     //penPattern->setFixedWidth(40);
 
     connect(penPattern,SIGNAL(activated(QString)),scene,SLOT(changePenStyle(QString)));
@@ -247,8 +286,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionClear, SIGNAL(triggered()), scene, SLOT(clearImage()));
 
 
-
-
 }
 
 MainWindow::~MainWindow()
@@ -282,13 +319,26 @@ QVBoxLayout *MainWindow::createToolsGroup()
 {
     QVBoxLayout *vbox = new QVBoxLayout;
 
-    for (unsigned int i = 0; i < allButtons.size();i++)
+    QHBoxLayout *hbox = new QHBoxLayout;
+    QVBoxLayout *vbox1 = new QVBoxLayout;
+    QVBoxLayout *vbox2 = new QVBoxLayout;
+
+
+    for (unsigned int i = 0; i < allButtons.size()/2;i++)
     {
-        allButtons[i]->setMaximumWidth(50);
-        allButtons[i]->setMinimumHeight(20);
-        vbox->addWidget(allButtons[i]);
-        vbox->addStretch(-1);
+        allButtons[i]->setFixedSize(30,30);
+        vbox1->addWidget(allButtons[i]);
+        vbox1->addStretch(3);
     }
+    hbox->addLayout(vbox1);
+    for (unsigned int i = allButtons.size()/2; i < allButtons.size();i++)
+    {
+        allButtons[i]->setFixedSize(30,30);
+        vbox2->addWidget(allButtons[i]);
+        vbox2->addStretch(3);
+    }
+    hbox->addLayout(vbox2);
+    vbox->addLayout(hbox);
     vbox->addSpacing(15);
 
     return vbox;

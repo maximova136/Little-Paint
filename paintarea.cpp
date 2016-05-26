@@ -8,33 +8,15 @@ paintArea::paintArea(QWidget *parent) : QWidget(parent)
     myPenWidth = 1;
     shiftOn = false;
 
-    //setSettings("Brush",Qt::black,QPen(Qt::SolidLine),Qt::white,QBrush(Qt::SolidPattern));
     setSettings("Brush",Qt::black,myPenWidth,Qt::white);
     
     firstColActive = true;
-//    QImage newImage(QSize(600,400), QImage::Format_RGB32);
-//    newImage.fill(qRgb(255, 255, 255));
-//    QPainter painter(&newImage);
-//    painter.setRenderHint(QPainter::Antialiasing, true);
-//    painter.drawImage(QPoint(0, 0), image);
-//    image = newImage;
 //    image = QImage(QSize(600,400),QImage::Format_RGB32);
-    image = QImage(QSize(600,400),QImage::Format_ARGB32_Premultiplied);
+    image = QImage(QSize(400,250),QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::white);
-    image = image.scaled(300,200,Qt::KeepAspectRatio);
+    //image = image.scaled(300,200,Qt::KeepAspectRatio);
     copyImage = image;
     update();
-    //imageLabel = new QLabel();
-    //imageLabel->setBackgroundRole(QPalette::Base);
-    //imageLabel->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
-    //imageLabel->setPixmap(QPixmap::fromImage(image));
-    /*scrollArea = new QScrollArea;
-    scrollArea->setBackgroundRole(QPalette::Dark);
-    scrollArea->setWidget(imageLabel);*/
-    //scrollArea->show();
-    //scrollArea->setVisible(true);
-
-
 }
 
 void paintArea::shiftActive(bool active)
