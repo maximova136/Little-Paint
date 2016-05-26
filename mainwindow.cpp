@@ -6,6 +6,7 @@
 #include <iostream>
 #include <QDebug>
 #include <QtCore>
+#include <QScrollArea>
 //#include "paintarea.h"
 //#include "palette.h"
 MainWindow::MainWindow(QWidget *parent) :
@@ -18,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ///scene->setSceneRect(0,0, ui->graphicsView->width()-40, ui->graphicsView->height()-30);
     ///ui->graphicsView->setScene(scene);
 
-    scene = new paintArea;
+    scene = new paintArea();
 
     QPushButton *ellipseButton = new QPushButton(tr("&Ellipse"));
     ellipseButton->setObjectName(tr("Ellipse"));
@@ -76,8 +77,29 @@ MainWindow::MainWindow(QWidget *parent) :
     hbox->addLayout(vbox);
     //hbox->addLayout(createToolsGroup());
     ///hbox->addWidget(ui->graphicsView);
-    hbox->addWidget(scene);
 
+
+    /*QWidget* scrollWidget = new QWidget();
+    QVBoxLayout* lay = new QVBoxLayout();
+    lay->addWidget(scene);
+//    hbox->addLayout(lay);
+    scrollWidget->setLayout(lay);
+    view = new QScrollArea();
+
+    //scene->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    //view->setWidget(scene);
+    //view->setGeometry(QRect(110, 80, 120, 80));
+
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    view->setWidget(scrollWidget);
+
+    hbox->addWidget(scene);
+    hbox->addWidget(view);
+    view->show();
+    view->resize(600,400);
+*/
+    //hbox->addLayout(view);
     palette = new Palette(mToolbar);
     addToolBar(Qt::BottomToolBarArea, palette);
 
@@ -100,14 +122,21 @@ MainWindow::MainWindow(QWidget *parent) :
     allButtons[0]->setGraphicsEffect(pShadow);
 
 
+    //hbox->addWidget(scene->scrollArea);
+    hbox->addWidget(scene);
+    //view = new QScrollArea();
+    //view->setWidget(scene->imageLabel);
+    //hbox->addWidget(view);
     ui->centralWidget->setLayout(hbox);
-    ui->mainToolBar->setWhatsThis("i'm future palette");
-    ui->mainToolBar->close();
+
+    //scene->setSettings("Brush",palette->getCol1(),slider->value(),palette->getCol2(),scene->penStyle,scene->brushStyle);
+
 
     connect(palette, SIGNAL(colorsChanged(QColor,QColor)),scene, SLOT(changeColors(QColor,QColor)));
     connect(palette, SIGNAL(firstColorIsActive(bool)),scene, SLOT(firstColorActive(bool)));
 
     connect(ui->actionClear, SIGNAL(triggered()), scene, SLOT(clearImage()));
+
 
 }
 
@@ -132,7 +161,9 @@ void MainWindow::on_allButtons_clicked()
     pShadow->setXOffset(2);
     pShadow->setYOffset(2);
     currentButton->setGraphicsEffect(pShadow);
-    scene->setSettings(currentButton->objectName(),palette->getCol1(),Qt::DotLine,palette->getCol2(),Qt::BDiagPattern);
+   // scene->setSettings(currentButton->objectName(),palette->getCol1(),Qt::DotLine,palette->getCol2(),Qt::BDiagPattern);
+    scene->setSettings(currentButton->objectName(),palette->getCol1(),slider->value(),palette->getCol2(),scene->getPenStyle(),scene->getBrushStyle());
+
 }
 
 

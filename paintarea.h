@@ -17,9 +17,18 @@ public:
     bool isModified() const { return modified; }
     QColor getPenColor() const { return penColor; }
     int penWidth() const { return myPenWidth; }
+    Qt::PenStyle getPenStyle() {return penStyle;}
+    Qt::BrushStyle getBrushStyle() const {return brushStyle;}
     void setSettings(QString _drawableObj, QColor _penColor,QPen _penStyle, QColor _brushColor,  QBrush _brushStyle);
+    void setSettings(QString _drawableObj, QColor _penColor,  int width, QColor _brushColor, Qt::PenStyle _penStyle = Qt::SolidLine, Qt::BrushStyle _brushStyle = Qt::NoBrush);
     void setColors(QColor col1, QColor col2);
     void setPen(int wid);
+    void setPen(Qt::PenStyle _style = Qt::SolidLine);
+
+
+    //QScrollArea* scrollArea;
+    //QLabel* imageLabel;
+
 
 signals:
 
@@ -42,6 +51,7 @@ private:
     void drawLineTo(const QPoint &endPoint);
     //don't use it \/ //
     void drawLineTo(const QPoint &endPoint, const Qt::MouseButton &button);
+    void drawLine(const QPoint &endPoint);
     void resizeImage(QImage *image, const QSize &newSize);
     //don't use on of it \/ //  (first maybe)
     void fillTool(QPoint pixel, QRgb Col);
@@ -51,12 +61,19 @@ private:
     bool scribbling;
     int myPenWidth;
     QImage image;
+    //QLabel image;
+    QImage copyImage;
+
+
+
     QPoint lastPoint;
 
 
 
     QColor penColor;
+    Qt::PenStyle penStyle;
     QColor brushColor;
+    Qt::BrushStyle brushStyle;
     QString drawableObj;
 
     QBrush brush;

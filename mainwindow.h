@@ -42,6 +42,9 @@ signals:
 private:
     Ui::MainWindow *ui;
     ///paintScene *scene;
+    ///
+    ///
+    QScrollArea* view;
     paintArea *scene;
     QGraphicsEllipseItem *ellipse;
     QGraphicsRectItem *rectangle;

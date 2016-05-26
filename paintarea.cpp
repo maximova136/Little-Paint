@@ -7,15 +7,40 @@ paintArea::paintArea(QWidget *parent) : QWidget(parent)
     scribbling = false;
     myPenWidth = 1;
 
-    setSettings("Brush",Qt::black,QPen(Qt::SolidLine),Qt::white,QBrush(Qt::SolidPattern));
-
+    //setSettings("Brush",Qt::black,QPen(Qt::SolidLine),Qt::white,QBrush(Qt::SolidPattern));
+    setSettings("Brush",Qt::black,myPenWidth,Qt::white);
+    
     firstColActive = true;
+//    QImage newImage(QSize(600,400), QImage::Format_RGB32);
+//    newImage.fill(qRgb(255, 255, 255));
+//    QPainter painter(&newImage);
+//    painter.setRenderHint(QPainter::Antialiasing, true);
+//    painter.drawImage(QPoint(0, 0), image);
+//    image = newImage;
+//    image = QImage(QSize(600,400),QImage::Format_RGB32);
+    image = QImage(QSize(600,400),QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::white);
+    image = image.scaled(300,200,Qt::KeepAspectRatio);
+    copyImage = image;
+    update();
+    //imageLabel = new QLabel();
+    //imageLabel->setBackgroundRole(QPalette::Base);
+    //imageLabel->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
+    //imageLabel->setPixmap(QPixmap::fromImage(image));
+    /*scrollArea = new QScrollArea;
+    scrollArea->setBackgroundRole(QPalette::Dark);
+    scrollArea->setWidget(imageLabel);*/
+    //scrollArea->show();
+    //scrollArea->setVisible(true);
+
+
 }
 
 
 void paintArea::clearImage()
 {
     image.fill(qRgb(255, 255, 255));
+    copyImage = image;
     modified = true;
     update();
 }
@@ -35,12 +60,9 @@ void paintArea::changeColors(QColor col1, QColor col2)
 
 void paintArea::changeWidth(int width)
 {
-    setPen(width);
-}
+    myPenWidth = width;
+    setPen(myPenWidth);
 
-void paintArea::setPen( int wid)
-{
-    pen = QPen(QBrush(penColor),wid);
 }
 
 void paintArea::firstColorActive(bool first)
@@ -51,6 +73,17 @@ void paintArea::firstColorActive(bool first)
         firstColActive = false;
 }
 
+void paintArea::setPen( int wid)
+{
+   // pen = QPen(QBrush(penColor),wid);
+    //pen = QPen(penColor, wid, penStyle);
+    pen.setWidth(wid);
+}
+
+void paintArea::setPen(Qt::PenStyle _style)
+{
+    pen.setStyle(_style);
+}
 
 void paintArea::setColors(QColor col1, QColor col2)
 {
@@ -73,6 +106,16 @@ void paintArea::mousePressEvent(QMouseEvent *event)
     {
 
     }
+    else if (drawableObj == "Line")
+    {
+        copyImage = image;
+        lastPoint = event->pos();
+        scribbling = true;
+        if (event->button()!=0)
+        {
+            button = event->button();
+        }
+    }
     else if (drawableObj == "Fill")
     {
         QPointF point = event->pos();
@@ -86,14 +129,17 @@ void paintArea::mousePressEvent(QMouseEvent *event)
         {
             newColor = brushColor;
         }
-        qDebug()<<image.width();
-        qDebug()<<image.height();
         qDebug()<<event->pos();
         //fillTool(event->pos(),newColor.rgb());
-        fillToolWork(event->pos().x(),event->pos().y(), image.pixel(event->pos()),newColor.rgb());
-        update();
+        if (event->pos().x()< image.width() && event->pos().y() < image.height())
+        {
+             fillToolWork(event->pos().x(),event->pos().y(), image.pixel(event->pos()),newColor.rgb());
+             update();
+        }
 
     }
+    //imageLabel->setPixmap(QPixmap::fromImage(image));
+
     qDebug()<<"mouse pressed";
 }
 
@@ -111,6 +157,20 @@ void paintArea::mouseMoveEvent(QMouseEvent *event)
             //drawLineTo(event->pos(),event->button());
 
     }
+    else if (drawableObj == "Line")
+    {
+        copyImage = image;
+
+        if (event->button()==Qt::LeftButton)
+            button = Qt::LeftButton;
+        else if (event->button() == Qt::RightButton)
+            button =  Qt::RightButton;
+        if (scribbling)
+            drawLine(event->pos());
+        update();
+    }
+    //imageLabel->setPixmap(QPixmap::fromImage(image));
+
 }
 
 void paintArea::mouseReleaseEvent(QMouseEvent *event)
@@ -126,6 +186,15 @@ void paintArea::mouseReleaseEvent(QMouseEvent *event)
         }
 
     }
+    else if (drawableObj == "Line")
+    {
+        if (scribbling)
+        {
+            scribbling = false;
+            image = copyImage;
+        }
+    }
+
     qDebug()<<"mouse released";
 
 }
@@ -134,41 +203,84 @@ void paintArea::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
+    //copyImage = image;
     QRect dirtyRect = event->rect();
-    painter.drawImage(dirtyRect, image, dirtyRect);
+    if (drawableObj!="Line")
+    {
+        painter.drawImage(dirtyRect, image, dirtyRect);
+    }
+    else
+    {
+        painter.drawImage(dirtyRect,copyImage,dirtyRect);
+    }
+    qDebug()<<"painEvent";
+
  }
 
 void paintArea::resizeEvent(QResizeEvent *event)
 {
-    if (width() > image.width() || height() > image.height()) {
-        int newWidth = qMax(width() + 128, image.width());
-        int newHeight = qMax(height() + 128, image.height());
-        resizeImage(&image, QSize(newWidth, newHeight));
-        update();
-    }
+//    if (width() > image.width() || height() > image.height()) {
+//        int newWidth = qMax(width() + 128, image.width());
+//        int newHeight = qMax(height() + 128, image.height());
+//        resizeImage(&image, QSize(newWidth, newHeight));
+//        //resizeImage(&image, QSize(image.width(),image.height()));
+//        update();
+//    }
     QWidget::resizeEvent(event);
+    update();
 }
+
+void paintArea::drawLine(const QPoint &endPoint)
+{
+    copyImage = image;
+
+    QPainter painter(&copyImage);
+
+     painter.setRenderHint(QPainter::Antialiasing, true);
+
+     if (button == Qt::LeftButton)
+     {
+         painter.setPen(QPen(penColor, pen.width(), pen.style(), Qt::RoundCap, Qt::RoundJoin));
+     }
+     else
+     {
+         painter.setPen(QPen(brushColor, pen.width(), pen.style(), Qt::RoundCap, Qt::RoundJoin));
+     }
+
+     painter.drawLine(lastPoint, endPoint);
+     modified = true;
+
+     int rad = (myPenWidth / 2) + 2;
+
+     update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+}
+
 
 void paintArea::drawLineTo(const QPoint &endPoint)
 {
-    QPainter painter(&image);
+   //QPainter painter(imageLabel);
+   QPainter painter(&image);
+
     painter.setRenderHint(QPainter::Antialiasing, true);
     if (button == Qt::LeftButton)
     {
-        painter.setPen(QPen(penColor, pen.width(), Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter.setPen(QPen(penColor, pen.width(), pen.style(), Qt::RoundCap, Qt::RoundJoin));
     }
     else
     {
-        painter.setPen(QPen(brushColor, pen.width(), Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter.setPen(QPen(brushColor, pen.width(), pen.style(), Qt::RoundCap, Qt::RoundJoin));
     }
 
     painter.drawLine(lastPoint, endPoint);
     modified = true;
 
     int rad = (myPenWidth / 2) + 2;
-    update(QRect(lastPoint, endPoint).normalized()
-                                     .adjusted(-rad, -rad, +rad, +rad));
+    update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
     lastPoint = endPoint;
+    //qDebug()<<penStyle<<pen.style();
+    //imageLabel->setPixmap(QPixmap::fromImage(image));
+    //imageLabel->update();
+
 }
 
 void paintArea::drawLineTo(const QPoint &endPoint, const Qt::MouseButton &button)
@@ -221,8 +333,23 @@ void paintArea::setSettings(QString _drawableObj, QColor _penColor, QPen _pen, Q
     pen = _pen;
     setColors(_penColor,_brushColor);
     brush = _brush;
+
+    image = copyImage;
     qDebug()<<"set settings"<<drawableObj;
 }
+
+void paintArea::setSettings(QString _drawableObj, QColor _penColor, int width, QColor _brushColor, Qt::PenStyle _penStyle, Qt::BrushStyle _brushStyle)
+{
+    drawableObj = _drawableObj;
+    pen = QPen(_penColor,width,_penStyle);
+    brush = QBrush(_brushColor,_brushStyle);
+    penStyle = _penStyle;
+    brushStyle = _brushStyle;
+    qDebug()<<"set settings"<<drawableObj;
+    qDebug()<<_penColor<<width<<_brushColor<<_penStyle<<_brushStyle;
+
+}
+
 
 void paintArea::fillTool(QPoint pixel, QRgb Col)
 {
@@ -258,7 +385,6 @@ void paintArea::fillTool(QPoint pixel, QRgb Col)
 void paintArea::fillToolWork(int x, int y, QRgb oldColor, QRgb newColor)
 {
     // void PaintWidget::Fill2(QRgb oldColor, QRgb newColor, int x, int y)
-
     if (oldColor == newColor) return;
 
     QStack<QPoint> stk;
@@ -298,5 +424,6 @@ void paintArea::fillToolWork(int x, int y, QRgb oldColor, QRgb newColor)
         }
 
     }
+
 
 }

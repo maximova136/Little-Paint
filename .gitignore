@@ -223,3 +223,7 @@ blaba.pro.user.23c8563
 *.user
 object_script.blaba.Release
 *.Debug
+*.exe
+debug/blaba.exe
+*.o
+debug/moc_paintscene.o
