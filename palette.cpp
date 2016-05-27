@@ -143,7 +143,7 @@ void Palette::on_butCol2_clicked(QColor) {
 }
 
 void Palette::on_colors_clicked(QColor color) {
-    //qDebug()<< sender();
+    qDebug()<< sender();
     if (firstColActive) {
         butCol1->changeColor(color);
         col1 = color;

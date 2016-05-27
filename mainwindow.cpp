@@ -120,6 +120,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(eraserTransparency, SIGNAL(valueChanged(int)),this,SLOT(setTranspPercentage(int)));
     connect(eraserTransparency, SIGNAL(valueChanged(int)), scene, SLOT(changeTransparency(int)));*/
 
+
     penPattern = new QComboBox();
     QPixmap pix (50,50);
     pix.fill(Qt::white);

@@ -13,7 +13,7 @@ PaintArea::PaintArea(QWidget *parent) : QWidget(parent) {
     firstColActive = true;
     image = QImage(QSize(600,350),QImage::Format_ARGB32_Premultiplied);
     // Here is possible to create transparent canvas
- //   image.fill(Qt::white);
+   image.fill(Qt::white);
 //    QPainter painter(&image);
 //    painter.fillRect(0,0,600,350,Qt::transparent);
 //    painter.setCompositionMode(QPainter::CompositionMode_Clear);
@@ -52,7 +52,9 @@ void PaintArea::saveImage() {
         qDebug()<<fileFullName <<path ;
         int indexOfLastDot = fileFullName.lastIndexOf(".");
         QStringRef format (&fileFullName, indexOfLastDot+1,fileFullName.length()-indexOfLastDot-1);
-        image.save(fileFullName,format.toUtf8().toUpper().constData(),100);
+        if (!image.save(fileFullName,format.toUtf8().toUpper().constData(),100)) {
+            QMessageBox::warning(this, tr("Error saving file"), tr("Can't save file \"%1\".").arg(fileFullName));
+        }
         qDebug()<<format;
     }
 }
@@ -138,6 +140,9 @@ void PaintArea::mousePressEvent(QMouseEvent *event) {
     {
         lastPoint = event->pos();
         scribbling = true;
+        if (event->button()!=0) {
+            button = event->button();
+        }
 
     } else if ((drawableObj == "Ellipse") || (drawableObj == "Rectangle") ||
                (drawableObj == "Triangle") || (drawableObj == "Line"))
@@ -297,6 +302,7 @@ void PaintArea::mouseReleaseEvent(QMouseEvent *event)
             capCount = 0;
             penCapStyle = Qt::SquareCap;
             brushTool(event->pos());
+            penCapStyle = Qt::RoundCap;
             scribbling = false;
         }
     }
@@ -419,12 +425,14 @@ void PaintArea::brushTool(const QPoint &endPoint){
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     if (drawableObj != "Eraser") {
+        qDebug()<<"i'm brush";
         if (button == Qt::LeftButton) {
             painter.setPen(QPen(penColor, pen.width(), pen.style(), Qt::RoundCap, Qt::RoundJoin));
         } else {
             painter.setPen(QPen(brushColor, pen.width(), pen.style(), Qt::RoundCap, Qt::RoundJoin));
         }
     } else {
+        qDebug()<<"i'm eraser";
         painter.setPen(QPen(Qt::white,pen.width(),Qt::SolidLine,penCapStyle, Qt::BevelJoin));
         //painter.setPen(QPen(QBrush(qRgba(255,0,0,100)),pen.width(),pen.style(),Qt::SquareCap, Qt::MiterJoin));
         //painter.setBrush(Qt::NoBrush);

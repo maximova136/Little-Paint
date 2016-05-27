@@ -53,6 +53,7 @@ private:
     QLabel* sliderLabel;
     QLabel* eraserLabel;
 
+
     QVBoxLayout *createToolsGroup();
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
