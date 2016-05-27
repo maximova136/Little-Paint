@@ -76,6 +76,13 @@ MainWindow::MainWindow(QWidget *parent) :
     pipetteButton->setIconSize(QSize(20,20));
     pipetteButton->setToolTip(pipetteButton->objectName());
 
+    QPushButton *selectionButton = new QPushButton();
+    selectionButton->setObjectName("Selection");
+    selectionButton->setIcon(QIcon("media/selection.png"));
+    selectionButton->setIconSize(QSize(25,25));
+    selectionButton->setToolTip(selectionButton->objectName());
+
+
     allButtons.clear();
     allButtons.push_back(brushButton);
     allButtons.push_back(ellipseButton);
@@ -85,8 +92,9 @@ MainWindow::MainWindow(QWidget *parent) :
     allButtons.push_back(pipetteButton);
     allButtons.push_back(lineButton);
     allButtons.push_back(curveButton);
-    allButtons.push_back(textButton);
+   // allButtons.push_back(textButton);
     allButtons.push_back(eraserButton);
+    allButtons.push_back(selectionButton);
 
     slider = new QSlider(Qt::Vertical);
     sliderLabel = new QLabel("1");

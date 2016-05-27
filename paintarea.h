@@ -11,8 +11,6 @@ public:
     explicit PaintArea(QWidget *parent = 0);
     //    bool openImage(const QString &fileName);
     //    bool saveImage(const QString &fileName, const char *fileFormat);
-    //    void setPenColor(const QColor &newColor);
-    //    void setPenWidth(int newWidth);
 
     bool isModified() const { return modified; }
     QColor getPenColor() const { return penColor; }
@@ -58,16 +56,21 @@ private:
     bool modified;
     bool scribbling;
     bool shiftOn;
-
+    bool selectionOn;
+    bool wasMovedSelection;
     bool drawCurve;
+
 
     int eraserTransparency;
     int myPenWidth;
     QImage image;
     QImage copyImage;
+    QImage bufImage;
 
     QPoint lastPoint;
     QPoint c1,c2,cEndPoint;
+
+    QRect selection;
 
     QColor penColor;
     Qt::PenStyle penStyle;

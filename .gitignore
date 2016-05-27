@@ -227,3 +227,4 @@ object_script.blaba.Release
 debug/blaba.exe
 *.o
 debug/moc_paintscene.o
+*.o

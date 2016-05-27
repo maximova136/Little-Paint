@@ -6,7 +6,9 @@ PaintArea::PaintArea(QWidget *parent) : QWidget(parent) {
     scribbling = false;
     myPenWidth = 1;
     shiftOn = false;
+    selectionOn = false;
     drawCurve = false;
+    wasMovedSelection = false;
 
     setSettings("Brush",Qt::black,myPenWidth,Qt::white);
     
@@ -17,8 +19,9 @@ PaintArea::PaintArea(QWidget *parent) : QWidget(parent) {
 //    QPainter painter(&image);
 //    painter.fillRect(0,0,600,350,Qt::transparent);
 //    painter.setCompositionMode(QPainter::CompositionMode_Clear);
-    eraserTransparency = 0;
-    capCount = 0;
+
+   /* eraserTransparency = 0;
+    capCount = 0;*/
     copyImage = image;
     update();
 }
@@ -136,25 +139,21 @@ void PaintArea::setColors(QColor col1, QColor col2) {
 }
 
 void PaintArea::mousePressEvent(QMouseEvent *event) {
-    if (drawableObj == "Brush")
-    {
+    if (drawableObj == "Brush") {
         lastPoint = event->pos();
         scribbling = true;
         if (event->button()!=0) {
             button = event->button();
         }
-
     } else if ((drawableObj == "Ellipse") || (drawableObj == "Rectangle") ||
-               (drawableObj == "Triangle") || (drawableObj == "Line"))
-    {
+               (drawableObj == "Triangle") || (drawableObj == "Line")) {
         copyImage = image;
         lastPoint = event->pos();
         scribbling = true;
         if (event->button()!=0) {
             button = event->button();
         }
-    } else if (drawableObj == "Curve")
-    {
+    } else if (drawableObj == "Curve") {
         if (!drawCurve) {
             copyImage = image;
             lastPoint = event->pos();
@@ -166,9 +165,7 @@ void PaintArea::mousePressEvent(QMouseEvent *event) {
             copyImage = image;
             c2 = event->pos();
         }
-
-    } else if (drawableObj == "Fill")
-    {
+    } else if (drawableObj == "Fill") {
         QColor newColor;
         button = event->button();
         if (button == Qt::LeftButton) {
@@ -177,7 +174,6 @@ void PaintArea::mousePressEvent(QMouseEvent *event) {
             newColor = brushColor;
         }
         qDebug()<<event->pos();
-
         if (event->pos().x()< image.width() && event->pos().y() < image.height()) {
              fillTool(event->pos().x(),event->pos().y(), image.pixel(event->pos()),newColor.rgb());
              update();
@@ -188,8 +184,36 @@ void PaintArea::mousePressEvent(QMouseEvent *event) {
     } else if (drawableObj == "Eraser") {
         lastPoint = event->pos();
         scribbling = true;
-//        capCount++;
+        capCount++;
         penCapStyle = Qt::SquareCap;
+    } else if (drawableObj == "Selection") {
+        qDebug()<<"press selection"<<selectionOn;
+        wasMovedSelection = false;
+        if (!selectionOn)
+        {
+            qDebug()<<"no selection";
+            copyImage = image;
+            lastPoint = event->pos();
+            scribbling = true;
+            if (event->button()!=0) {
+                button = event->button();
+            }
+
+        } else
+        {
+            qDebug()<<"selection ";
+            selection.setCoords(lastPoint.x(),lastPoint.y(), cEndPoint.x(),cEndPoint.y());
+            if (QRegion(selection).contains(event->pos()))
+            {
+                bufImage = image.copy(selection);
+                qDebug()<<"contains";
+                lastPoint = event->pos();
+            } else {
+                qDebug()<<"don't contains";
+                scribbling = false;
+                selectionOn = false;
+            }
+        }
     }
     qDebug()<<"mouse pressed";
 }
@@ -256,8 +280,18 @@ void PaintArea::mouseMoveEvent(QMouseEvent *event)
         }
         if (scribbling)
             brushTool(event->pos());
+    } else if (drawableObj == "Selection") {
+        qDebug()<<"move selection"<<selectionOn;
+        wasMovedSelection = true;
+        if (scribbling) {
+            qDebug()<<"scribble";
+            copyImage = image;
+            paint(event->pos());
+            update();
+        } else {
+            qDebug()<<"no scribble";
+        }
     }
-
 }
 
 void PaintArea::mouseReleaseEvent(QMouseEvent *event)
@@ -275,8 +309,7 @@ void PaintArea::mouseReleaseEvent(QMouseEvent *event)
             image = copyImage;
         }
     } else if (drawableObj == "Curve") {
-        if (drawCurve)
-        {
+        if (drawCurve) {
             if (scribbling) {
                 paint(event->pos());
                 drawCurve = false;
@@ -305,6 +338,44 @@ void PaintArea::mouseReleaseEvent(QMouseEvent *event)
             penCapStyle = Qt::RoundCap;
             scribbling = false;
         }
+    } else if (drawableObj == "Selection") {
+        qDebug()<<"RELEASE selection"<<selectionOn;
+        if (wasMovedSelection)
+        {
+            qDebug()<<"was moved";
+            if (!selectionOn) {
+                qDebug()<<"no selection ";
+                if (scribbling) {
+                    qDebug()<<"scribble";
+                    cEndPoint = event->pos();
+                    selectionOn = true;
+                } else {
+                    qDebug()<<"not scribble";
+                }
+            } else {
+                qDebug()<<"selection ";
+
+                if (scribbling) {
+                    qDebug()<<"scribble";
+                    paint(event->pos());
+                    scribbling = false;
+                    image = copyImage;
+                    selectionOn = false;
+                }
+                else {
+                    qDebug()<<"not scribble";
+                    copyImage = image;
+//                    QPainter painter (&copyImage);
+//                    painter.drawImage(0,0,image);
+//                    painter.setPen(Qt::NoPen);
+                    update(0,0,image.width(),image.height());
+                }
+            }
+        }
+        else
+        {
+            qDebug()<<"was not moved";
+        }
     }
     qDebug()<<"mouse released";
 }
@@ -316,12 +387,18 @@ void PaintArea::paintEvent(QPaintEvent *event)
     QRect dirtyRect = event->rect(); 
 
     if ((drawableObj!="Line") && (drawableObj!="Ellipse") && (drawableObj!="Rectangle")
-            && (drawableObj!="Triangle") && (drawableObj != "Curve")) {
+            && (drawableObj!="Triangle") && (drawableObj != "Curve") && (drawableObj != "Selection")) {
         painter.drawImage(dirtyRect, image, dirtyRect);
+        qDebug()<<"painEvent1";
+
     } else {
         painter.drawImage(dirtyRect,copyImage,dirtyRect);
+        qDebug()<<"painEvent2";
+
     }
-    qDebug()<<"painEvent";
+
+    painter.end();
+//    qDebug()<<"painEvent";
 }
 
 void PaintArea::resizeEvent(QResizeEvent *event)
@@ -391,6 +468,22 @@ void PaintArea::paint(const QPoint &endPoint)
              myPath.cubicTo(c1, c2, cEndPoint);
 
              painter.drawPath(myPath);
+         }
+         else if (drawableObj == "Selection") {
+             qDebug()<<"paint selection"<<selectionOn;
+             if (!selectionOn) {
+                 painter.setPen(QPen(penColor, pen.width(), Qt::DashLine, Qt::RoundCap, Qt::RoundJoin));
+                 painter.setBrush(QBrush(Qt::transparent));
+//                 painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+                 if (shiftOn) {
+                     painter.drawRect(QRect(lastPoint,QSize(endPoint.y()-lastPoint.y(),endPoint.y()-lastPoint.y())));
+                 } else {
+                     painter.drawRect(QRect(lastPoint,endPoint));
+                 }
+             } else {
+                 painter.fillRect(selection,brushColor);
+                 painter.drawImage(QPoint(endPoint.x()-bufImage.width()/2,endPoint.y()-bufImage.height()/2),bufImage);
+             }
          }
      }
      modified = true;
