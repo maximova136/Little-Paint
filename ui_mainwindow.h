@@ -27,7 +27,7 @@ class Ui_MainWindow
 public:
     QAction *actionNew;
     QAction *actionOpen;
-    QAction *actionSave;
+    QAction *actionSaveAs;
     QAction *actionClear;
     QWidget *centralWidget;
     QMenuBar *menuBar;
@@ -45,8 +45,8 @@ public:
         actionNew->setObjectName(QStringLiteral("actionNew"));
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName(QStringLiteral("actionOpen"));
-        actionSave = new QAction(MainWindow);
-        actionSave->setObjectName(QStringLiteral("actionSave"));
+        actionSaveAs = new QAction(MainWindow);
+        actionSaveAs->setObjectName(QStringLiteral("actionSaveAs"));
         actionClear = new QAction(MainWindow);
         actionClear->setObjectName(QStringLiteral("actionClear"));
         centralWidget = new QWidget(MainWindow);
@@ -68,7 +68,7 @@ public:
         menuBar->addAction(menuEdit->menuAction());
         menuFile->addAction(actionNew);
         menuFile->addAction(actionOpen);
-        menuFile->addAction(actionSave);
+        menuFile->addAction(actionSaveAs);
         menuEdit->addAction(actionClear);
 
         retranslateUi(MainWindow);
@@ -85,7 +85,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         actionOpen->setToolTip(QApplication::translate("MainWindow", "Open an image file", 0));
 #endif // QT_NO_TOOLTIP
-        actionSave->setText(QApplication::translate("MainWindow", "Save", 0));
+        actionSaveAs->setText(QApplication::translate("MainWindow", "Save As ", 0));
         actionClear->setText(QApplication::translate("MainWindow", "Clear", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0));

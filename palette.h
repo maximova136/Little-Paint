@@ -31,7 +31,7 @@ private:
     std::vector <QPushButton*> colors;
 
     QToolButton* choose;
-    paletteButton *butCol1, *butCol2;
+    PaletteButton *butCol1, *butCol2;
 
     QToolBar *mToolBar;
 

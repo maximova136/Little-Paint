@@ -19,24 +19,26 @@ public:
     int penWidth() const { return myPenWidth; }
     Qt::PenStyle getPenStyle() {return penStyle;}
     Qt::BrushStyle getBrushStyle() const {return brushStyle;}
-    void setSettings(QString _drawableObj, QColor _penColor,QPen _penStyle, QColor _brushColor,  QBrush _brushStyle);
+    //void setSettings(QString _drawableObj, QColor _penColor,QPen _penStyle, QColor _brushColor,  QBrush _brushStyle);
     void setSettings(QString _drawableObj, QColor _penColor,  int width, QColor _brushColor, Qt::PenStyle _penStyle = Qt::SolidLine, Qt::BrushStyle _brushStyle = Qt::SolidPattern);
     void setColors(QColor col1, QColor col2);
     void setPen(int wid);
     void setPen(Qt::PenStyle _style = Qt::SolidLine);
 
 signals:
-    void pipetteColor(QColor color);
+    void pipetteColor(QColor);
+    void signalBlockSettings(bool, bool, bool);
 
 public slots:
     void clearImage();
+    void saveImage();
     void changeColors(QColor, QColor);
     void changeWidth(int);
     void changePenStyle(QString);
     void changeBrushStyle(QString);
+    void changeTransparency(int);
     void firstColorActive(bool);
     void shiftActive(bool);
-
 
 protected:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
@@ -46,7 +48,6 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
     void paint(const QPoint &endPoint);
-
 
 private:
     void brushTool(const QPoint &endPoint);
@@ -60,6 +61,7 @@ private:
 
     bool drawCurve;
 
+    int eraserTransparency;
     int myPenWidth;
     QImage image;
     QImage copyImage;
@@ -69,6 +71,8 @@ private:
 
     QColor penColor;
     Qt::PenStyle penStyle;
+    Qt::PenCapStyle penCapStyle;
+    unsigned int capCount;
     QColor brushColor;
     Qt::BrushStyle brushStyle;
     QString drawableObj;

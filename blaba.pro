@@ -14,14 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    abstractfigure.cpp \
     palette.cpp \
     palettebutton.cpp \
     paintarea.cpp \
 
 
 HEADERS  += mainwindow.h \
-    abstractfigure.h \
     palette.h \
     palettebutton.h \
     paintarea.h

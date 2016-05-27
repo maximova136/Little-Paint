@@ -11,10 +11,14 @@ PaintArea::PaintArea(QWidget *parent) : QWidget(parent) {
     setSettings("Brush",Qt::black,myPenWidth,Qt::white);
     
     firstColActive = true;
-    image = QImage(QSize(400,250),QImage::Format_ARGB32_Premultiplied);
-    image.fill(Qt::white);
-
-    //image = image.scaled(300,200,Qt::KeepAspectRatio);
+    image = QImage(QSize(600,350),QImage::Format_ARGB32_Premultiplied);
+    // Here is possible to create transparent canvas
+ //   image.fill(Qt::white);
+//    QPainter painter(&image);
+//    painter.fillRect(0,0,600,350,Qt::transparent);
+//    painter.setCompositionMode(QPainter::CompositionMode_Clear);
+    eraserTransparency = 0;
+    capCount = 0;
     copyImage = image;
     update();
 }
@@ -31,6 +35,26 @@ void PaintArea::clearImage() {
     copyImage = image;
     modified = true;
     update();
+}
+
+void PaintArea::saveImage() {
+    QString path = QDir::currentPath() + "/image.png";
+    QString selectionFilter = tr("PNG (*.png)");
+    QString fileFullName = QFileDialog::getSaveFileName(
+            this,
+            tr("Save Picture"),
+            path,
+            tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)" ),
+            &selectionFilter);
+
+    if (!fileFullName.isEmpty()) {
+
+        qDebug()<<fileFullName <<path ;
+        int indexOfLastDot = fileFullName.lastIndexOf(".");
+        QStringRef format (&fileFullName, indexOfLastDot+1,fileFullName.length()-indexOfLastDot-1);
+        image.save(fileFullName,format.toUtf8().toUpper().constData(),100);
+        qDebug()<<format;
+    }
 }
 
 void PaintArea::changeColors(QColor col1, QColor col2) {
@@ -85,6 +109,10 @@ void PaintArea::changeBrushStyle(QString style)
     qDebug()<<style;
 }
 
+void PaintArea::changeTransparency(int value) {
+    eraserTransparency = value*10;
+}
+
 void PaintArea::firstColorActive(bool first) {
     if (first)
         firstColActive = true;
@@ -105,15 +133,12 @@ void PaintArea::setColors(QColor col1, QColor col2) {
     brushColor = col2;
 }
 
-void PaintArea::mousePressEvent(QMouseEvent *event)
-{
+void PaintArea::mousePressEvent(QMouseEvent *event) {
     if (drawableObj == "Brush")
     {
         lastPoint = event->pos();
         scribbling = true;
-        if (event->button()!=0) {
-            button = event->button();
-        }
+
     } else if ((drawableObj == "Ellipse") || (drawableObj == "Rectangle") ||
                (drawableObj == "Triangle") || (drawableObj == "Line"))
     {
@@ -152,17 +177,21 @@ void PaintArea::mousePressEvent(QMouseEvent *event)
              fillTool(event->pos().x(),event->pos().y(), image.pixel(event->pos()),newColor.rgb());
              update();
         }
-    } else if (drawableObj == "Pipette"){
+    } else if (drawableObj == "Pipette") {
         scribbling = true;
         emit pipetteColor(QColor(image.pixel(event->pos())));
+    } else if (drawableObj == "Eraser") {
+        lastPoint = event->pos();
+        scribbling = true;
+//        capCount++;
+        penCapStyle = Qt::SquareCap;
     }
     qDebug()<<"mouse pressed";
 }
 
 void PaintArea::mouseMoveEvent(QMouseEvent *event)
 {
-    if (drawableObj == "Brush")
-    {
+    if (drawableObj == "Brush") {
         if (event->button()==Qt::LeftButton)
             button = Qt::LeftButton;
         else if (event->button() == Qt::RightButton)
@@ -181,21 +210,22 @@ void PaintArea::mouseMoveEvent(QMouseEvent *event)
             paint(event->pos());
         update();
     }
-    else if (drawableObj == "Curve") {
+    else if (drawableObj == "Curve")
+    {
         copyImage = image;
-
         if (event->button()==Qt::LeftButton)
             button = Qt::LeftButton;
         else if (event->button() == Qt::RightButton)
             button =  Qt::RightButton;
 
-        if (scribbling)
+        if (scribbling) {
             if (!drawCurve){
                 drawLine(event->pos());
             } else {
                 c1 = event->pos();
                 paint(event->pos());
             }
+        }
         update();
     }
     else if (drawableObj == "Line")
@@ -213,7 +243,16 @@ void PaintArea::mouseMoveEvent(QMouseEvent *event)
     {
         if (scribbling)
             emit pipetteColor(QColor(image.pixel(event->pos())));
+    } else if (drawableObj == "Eraser") {
+        if (capCount < 3){
+            capCount++;
+        } else {
+            penCapStyle = Qt::RoundCap;
+        }
+        if (scribbling)
+            brushTool(event->pos());
     }
+
 }
 
 void PaintArea::mouseReleaseEvent(QMouseEvent *event)
@@ -248,10 +287,16 @@ void PaintArea::mouseReleaseEvent(QMouseEvent *event)
             scribbling = false;
             image = copyImage;
         }
-    } else if (drawableObj == "Pipette")
-    {
+    } else if (drawableObj == "Pipette") {
         if (scribbling) {
             emit pipetteColor(QColor(image.pixel(event->pos())));
+            scribbling = false;
+        }
+    } else if (drawableObj == "Eraser") {
+        if (scribbling) {
+            capCount = 0;
+            penCapStyle = Qt::SquareCap;
+            brushTool(event->pos());
             scribbling = false;
         }
     }
@@ -373,12 +418,20 @@ void PaintArea::brushTool(const QPoint &endPoint){
     QPainter painter(&image);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    if (button == Qt::LeftButton) {
-        painter.setPen(QPen(penColor, pen.width(), pen.style(), Qt::RoundCap, Qt::RoundJoin));
+    if (drawableObj != "Eraser") {
+        if (button == Qt::LeftButton) {
+            painter.setPen(QPen(penColor, pen.width(), pen.style(), Qt::RoundCap, Qt::RoundJoin));
+        } else {
+            painter.setPen(QPen(brushColor, pen.width(), pen.style(), Qt::RoundCap, Qt::RoundJoin));
+        }
     } else {
-        painter.setPen(QPen(brushColor, pen.width(), pen.style(), Qt::RoundCap, Qt::RoundJoin));
+        painter.setPen(QPen(Qt::white,pen.width(),Qt::SolidLine,penCapStyle, Qt::BevelJoin));
+        //painter.setPen(QPen(QBrush(qRgba(255,0,0,100)),pen.width(),pen.style(),Qt::SquareCap, Qt::MiterJoin));
+        //painter.setBrush(Qt::NoBrush);
+        //painter.setBackgroundMode(QPainter::CompositionMode_SourceIn);
+        //painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+        //image.setPixel(endPoint,qRgba(255,0,0,255));
     }
-
     painter.drawLine(lastPoint, endPoint);
     modified = true;
 
@@ -401,18 +454,6 @@ void PaintArea::resizeImage(QImage *image, const QSize &newSize)
 }
 
 
-void PaintArea::setSettings(QString _drawableObj, QColor _penColor, QPen _pen, QColor _brushColor, QBrush _brush)
-{
-    drawableObj = _drawableObj;
-
-    pen = _pen;
-    setColors(_penColor,_brushColor);
-    brush = _brush;
-
-    image = copyImage;
-    qDebug()<<"set settings"<<drawableObj;
-}
-
 void PaintArea::setSettings(QString _drawableObj, QColor _penColor, int width, QColor _brushColor, Qt::PenStyle _penStyle, Qt::BrushStyle _brushStyle)
 {
     drawableObj = _drawableObj;
@@ -422,16 +463,23 @@ void PaintArea::setSettings(QString _drawableObj, QColor _penColor, int width, Q
     brush = QBrush(_brushColor,_brushStyle);
     penStyle = _penStyle;
     brushStyle = _brushStyle;
-    qDebug()<<"set settings"<<drawableObj;
+    qDebug()<<"set settings2"<<drawableObj;
     qDebug()<<_penColor<<width<<_brushColor<<_penStyle<<_brushStyle;
-
+    if ((drawableObj == "Fill") || (drawableObj == "Text") || (drawableObj == "Pipette")) {
+        emit signalBlockSettings(true,true,true);
+    } else if ((drawableObj == "Brush") || (drawableObj == "Eraser")) {
+        emit signalBlockSettings(true,true,false);
+    } else if (drawableObj == "Line") {
+        emit signalBlockSettings(false,true,false);
+    } else {
+        emit signalBlockSettings(false,false,false);
+    }
 }
 
 
 void PaintArea::fillTool(int x, int y, QRgb oldColor, QRgb newColor)
 {
     if (oldColor == newColor) return;
-
     QStack<QPoint> stk;
     QPoint pt;
 
@@ -441,7 +489,6 @@ void PaintArea::fillTool(int x, int y, QRgb oldColor, QRgb newColor)
     stk.push(QPoint(x, y));
 
     while (!stk.empty()) {
-        //qDebug()<<"filling";
         pt = stk.pop();
         x = pt.x();
         y = pt.y();
@@ -465,10 +512,6 @@ void PaintArea::fillTool(int x, int y, QRgb oldColor, QRgb newColor)
                 spanRight = false;
             }
             y1++;
-
         }
-
     }
-
-
 }

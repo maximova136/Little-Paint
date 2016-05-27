@@ -3,7 +3,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 
-paletteButton::paletteButton(const QColor &color)
+PaletteButton::PaletteButton(const QColor &color)
 {
     mColor = color;
     setMinimumSize(QSize(30, 30));
@@ -14,7 +14,7 @@ paletteButton::paletteButton(const QColor &color)
     setStatusTip(color.name());
 }
 
-void paletteButton::mousePressEvent(QMouseEvent *event)
+void PaletteButton::mousePressEvent(QMouseEvent *event)
 {
     /*if(event->button() == Qt::LeftButton)
         DataSingleton::Instance()->setPrimaryColor(mColor);
@@ -26,7 +26,7 @@ void paletteButton::mousePressEvent(QMouseEvent *event)
     emit colorPicked(mColor);
 }
 
-void paletteButton::changeColor(QColor col)
+void PaletteButton::changeColor(QColor col)
 {
     mColor = col;
     QPixmap pixmap(20, 20);
@@ -36,7 +36,7 @@ void paletteButton::changeColor(QColor col)
 }
 
 
-QColor paletteButton::getColor()
+QColor PaletteButton::getColor()
 {
     return mColor;
 }

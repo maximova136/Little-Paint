@@ -28,6 +28,8 @@ public:
 
 private slots:
     void on_allButtons_clicked();
+    void blockSettings(bool penBoxBlocked, bool brushBoxBlocked, bool sliderBlocked);
+    void setTranspPercentage(int);
 
 public slots:
 
@@ -45,9 +47,11 @@ private:
     Palette *palette;
     QToolBar *mToolbar;
     QSlider *slider;
+    QSlider *eraserTransparency;
     QComboBox *penPattern;
     QComboBox *brushPattern;
-    QLabel* label;
+    QLabel* sliderLabel;
+    QLabel* eraserLabel;
 
     QVBoxLayout *createToolsGroup();
     void keyPressEvent(QKeyEvent *event);
