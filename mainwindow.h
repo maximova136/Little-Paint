@@ -4,14 +4,12 @@
 #include <QMainWindow>
 #include <QtGui>
 #include <QtCore>
-//#include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QtWidgets>
 #include <QWidget>
 #include <vector>
 
 #include "palette.h"
-#include "paintscene.h"
 #include "paintarea.h"
 
 enum BUTTON {ELLIPSE=0, RECTANGLE, TRIANGLE, LINE, CURVE, POLYGON};
@@ -29,10 +27,7 @@ public:
     ~MainWindow();
 
 private slots:
-    //void on_Buttons_clicked(int);
     void on_allButtons_clicked();
-    ///this is not used
-    void penWidthChanged(int);
 
 public slots:
 
@@ -42,11 +37,8 @@ signals:
 
 private:
     Ui::MainWindow *ui;
-    ///paintScene *scene;
-    ///
-    ///
     QScrollArea* view;
-    paintArea *scene;
+    PaintArea *scene;
     QGraphicsEllipseItem *ellipse;
     QGraphicsRectItem *rectangle;
     std::vector <QPushButton*> allButtons;
@@ -60,10 +52,6 @@ private:
     QVBoxLayout *createToolsGroup();
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
-   // void mousePressEvent(QGraphicsSceneMouseEvent *event);
-   // void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
-
-
 };
 
 #endif // MAINWINDOW_H

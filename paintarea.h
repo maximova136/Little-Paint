@@ -4,11 +4,11 @@
 #include <QWidget>
 #include <QPainter>
 #include <QtWidgets>
-class paintArea : public QWidget
+class PaintArea : public QWidget
 {
     Q_OBJECT
 public:
-    explicit paintArea(QWidget *parent = 0);
+    explicit PaintArea(QWidget *parent = 0);
     //    bool openImage(const QString &fileName);
     //    bool saveImage(const QString &fileName, const char *fileFormat);
     //    void setPenColor(const QColor &newColor);
@@ -25,12 +25,8 @@ public:
     void setPen(int wid);
     void setPen(Qt::PenStyle _style = Qt::SolidLine);
 
-
-    //QScrollArea* scrollArea;
-    //QLabel* imageLabel;
-
-
 signals:
+    void pipetteColor(QColor color);
 
 public slots:
     void clearImage();
@@ -48,35 +44,28 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-    //void keyPressEvent(QKeyEvent *event);
 
     void paint(const QPoint &endPoint);
 
 
 private:
-    void drawLineTo(const QPoint &endPoint);
-    //don't use it \/ //
-    void drawLineTo(const QPoint &endPoint, const Qt::MouseButton &button);
+    void brushTool(const QPoint &endPoint);
     void drawLine(const QPoint &endPoint);
     void resizeImage(QImage *image, const QSize &newSize);
-    //don't use on of it \/ //  (first maybe)
-    void fillTool(QPoint pixel, QRgb Col);
-    void fillToolWork(int x, int y, QRgb oldColor, QRgb newColor);
+    void fillTool(int x, int y, QRgb oldColor, QRgb newColor);
 
     bool modified;
     bool scribbling;
     bool shiftOn;
 
+    bool drawCurve;
+
     int myPenWidth;
     QImage image;
-    //QLabel image;
     QImage copyImage;
 
-
-
     QPoint lastPoint;
-
-
+    QPoint c1,c2,cEndPoint;
 
     QColor penColor;
     Qt::PenStyle penStyle;

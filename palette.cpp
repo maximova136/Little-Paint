@@ -103,37 +103,28 @@ void Palette::initializeItems()
 }
 
 
-void Palette::on_choose_clicked()
-{
-    if (firstColActive)
-    {
+void Palette::on_choose_clicked() {
+    if (firstColActive) {
         QColor color = QColorDialog::getColor(col1);
-        if (color.isValid())
-        {
+        if (color.isValid()) {
             butCol1->changeColor(color);
             col1 = color;
             emit colorsChanged(col1,col2);
         }
     }
-    else
-    {
+    else {
         QColor color = QColorDialog::getColor(col2);
-        if (color.isValid())
-        {
+        if (color.isValid()) {
             butCol2->changeColor(color);
             col2 = color;
             emit colorsChanged(col1,col2);
         }
-
     }
 }
 
-
-void Palette::on_butCol1_clicked(QColor)
-{
+void Palette::on_butCol1_clicked(QColor) {
     qDebug()<<"but1";
-    if (!firstColActive)
-    {
+    if (!firstColActive) {
         butCol1->setChecked(true);
         butCol2->setChecked(false);
         firstColActive = true;
@@ -141,11 +132,9 @@ void Palette::on_butCol1_clicked(QColor)
     }
 }
 
-void Palette::on_butCol2_clicked(QColor)
-{
+void Palette::on_butCol2_clicked(QColor) {
     qDebug()<<"but2";
-    if (firstColActive)
-    {
+    if (firstColActive) {
         butCol2->setChecked(true);
         butCol1->setChecked(false);
         firstColActive = false;
@@ -153,23 +142,16 @@ void Palette::on_butCol2_clicked(QColor)
     }
 }
 
-void Palette::on_colors_clicked(QColor color)
-{
-
-    qDebug()<< sender();
-
-    if (firstColActive)
-    {
+void Palette::on_colors_clicked(QColor color) {
+    //qDebug()<< sender();
+    if (firstColActive) {
         butCol1->changeColor(color);
         col1 = color;
-    }
-    else
-    {
+    } else {
         butCol2->changeColor(color);
         col2 = color;
     }
     emit colorsChanged(col1,col2);
-
 }
 
 bool Palette::isFirstColActive()

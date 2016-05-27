@@ -14,70 +14,67 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    scene = new PaintArea();
 
-    ///scene = new paintScene();
-    ///scene->setSceneRect(0,0, ui->graphicsView->width()-40, ui->graphicsView->height()-30);
-    ///ui->graphicsView->setScene(scene);
-
-    scene = new paintArea();
-
-//    QPushButton *ellipseButton = new QPushButton(tr("&Ellipse"));
     QPushButton *ellipseButton = new QPushButton();
     ellipseButton->setObjectName(tr("Ellipse"));
     ellipseButton->setIcon(QIcon("media/ellipse.png"));
     ellipseButton->setIconSize(QSize(25,25));
+    ellipseButton->setToolTip(ellipseButton->objectName());
 
-//    QPushButton *rectangleButton = new QPushButton(tr("&Rectangle"));
     QPushButton *rectangleButton = new QPushButton();
     rectangleButton->setObjectName(tr("Rectangle"));
     rectangleButton->setIcon(QIcon("media/rectangle.png"));
     rectangleButton->setIconSize(QSize(25,25));
+    rectangleButton->setToolTip(ellipseButton->objectName());
 
-    //QPushButton *triangleButton = new QPushButton(tr("&Triangle"));
     QPushButton *triangleButton = new QPushButton();
     triangleButton->setObjectName(tr("Triangle"));
     triangleButton->setIcon(QIcon("media/triangle.png"));
     triangleButton->setIconSize(QSize(24,18));
+    triangleButton->setToolTip(ellipseButton->objectName());
 
-//    QPushButton *lineButton = new QPushButton(tr("&Line"));
     QPushButton *lineButton = new QPushButton();
     lineButton->setObjectName(tr("Line"));
     lineButton->setIcon(QIcon("media/line.png"));
     lineButton->setIconSize(QSize(25,25));
+    lineButton->setToolTip(ellipseButton->objectName());
 
-//    QPushButton *curveButton = new QPushButton(tr("&Curve"));
     QPushButton *curveButton = new QPushButton();
     curveButton->setObjectName(tr("Curve"));
     curveButton->setIcon(QIcon("media/curve.png"));
     curveButton->setIconSize(QSize(15,15));
+    curveButton->setToolTip(ellipseButton->objectName());
 
-//    QPushButton *brushButton = new QPushButton(tr("&Brush"));
     QPushButton *brushButton = new QPushButton();
     brushButton->setObjectName(tr("Brush"));
     brushButton->setIcon(QIcon("media/pencil.png"));
     brushButton->setIconSize(QSize(23,23));
+    brushButton->setToolTip(ellipseButton->objectName());
 
-//    QPushButton *textButton = new QPushButton(tr("&Text"));
     QPushButton *textButton = new QPushButton();
     textButton->setObjectName(tr("Text"));
     textButton->setIcon(QIcon("media/text.png"));
     textButton->setIconSize(QSize(25,25));
+    textButton->setToolTip(ellipseButton->objectName());
 
-//    QPushButton *fillButton = new QPushButton(tr("&Fill"));
     QPushButton *fillButton = new QPushButton();
     fillButton->setObjectName(tr("Fill"));
     fillButton->setIcon(QIcon("media/fill.png"));
     fillButton->setIconSize(QSize(25,25));
+    fillButton->setToolTip(ellipseButton->objectName());
 
     QPushButton *eraserButton = new QPushButton();
     eraserButton->setObjectName(tr("Eraser"));
     eraserButton->setIcon(QIcon("media/eraser.png"));
     eraserButton->setIconSize(QSize(25,25));
+    eraserButton->setToolTip(ellipseButton->objectName());
 
     QPushButton *pipetteButton = new QPushButton();
     pipetteButton->setObjectName("Pipette");
     pipetteButton->setIcon(QIcon("media/pipette.png"));
     pipetteButton->setIconSize(QSize(20,20));
+    pipetteButton->setToolTip(ellipseButton->objectName());
 
     allButtons.clear();
     allButtons.push_back(brushButton);
@@ -98,7 +95,7 @@ MainWindow::MainWindow(QWidget *parent) :
     slider->setValue(1);
     slider->setTickInterval(1);
     slider->setMaximumWidth(25);
-    slider->setMinimumHeight(30);
+    slider->setMinimumHeight(50);
     slider->setTickPosition(QSlider::TicksLeft);
 
     connect(slider, SIGNAL(valueChanged(int)),label,SLOT(setNum(int)));
@@ -113,14 +110,12 @@ MainWindow::MainWindow(QWidget *parent) :
     penPattern->addItem(QIcon(pix),QString("Solid Line"));
     painter.end();
 
-
     pix.fill(Qt::white);
     painter.begin(&pix);
     painter.setPen(QPen(Qt::black,4,Qt::DashLine));
     painter.drawLine(0,pix.width()/2,pix.width()-1,pix.width()/2);
     penPattern->addItem(QIcon(pix),QString("Dash Line"));
     painter.end();
-
 
     pix.fill(Qt::white);
     painter.begin(&pix);
@@ -150,9 +145,8 @@ MainWindow::MainWindow(QWidget *parent) :
     penPattern->addItem(QIcon(pix),QString("No Line"));
     painter.end();
 
-    penPattern->setMaximumWidth(40);
-
-    //penPattern->setFixedWidth(40);
+    penPattern->setToolTip("Type of Drawable Line");
+    penPattern->setFixedWidth(100);
 
     connect(penPattern,SIGNAL(activated(QString)),scene,SLOT(changePenStyle(QString)));
 //    penPattern->setDisabled(true);
@@ -176,8 +170,6 @@ MainWindow::MainWindow(QWidget *parent) :
     painter.drawRect(0,0,pix.width(),pix.width());
     brushPattern->addItem(QIcon(pix),QString("Hor"));
     painter.end();
-
-
 
     pix.fill(Qt::white);
     painter.begin(&pix);
@@ -222,23 +214,12 @@ MainWindow::MainWindow(QWidget *parent) :
     brushPattern->addItem(QIcon(pix),QString("Dense"));
     painter.end();
 
-//    pix.fill(Qt::white);
-//    painter.begin(&pix);
-//    QLinearGradient linGradient(0,0,pix.width(),pix.width());
-//    linGradient.setColorAt(0,Qt::white);
-//    linGradient.setColorAt(1,Qt::black);
-//    painter.setBrush(linGradient);
-//    painter.drawRect(0,0,pix.width(),pix.width());
-//    brushPattern->addItem(QIcon(pix),QString("Gradient"));
-//    painter.end();
-
-    brushPattern->setMinimumWidth(40);
-    brushPattern->setMaximumWidth(40);
-    brushPattern->setFixedWidth(40);
+    //brushPattern->setMinimumWidth(40);
+//    brushPattern->setMaximumWidth(40);
+    brushPattern->setFixedWidth(100);
+    brushPattern->setToolTip("Pattern of Filling");
 
     connect(brushPattern,SIGNAL(activated(QString)),scene,SLOT(changeBrushStyle(QString)));
-
-
 
     QHBoxLayout *hbox = new QHBoxLayout;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -256,10 +237,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     palette = new Palette(mToolbar);
     addToolBar(Qt::BottomToolBarArea, palette);
+    connect(scene, SIGNAL(pipetteColor(QColor)), palette, SLOT(on_colors_clicked(QColor)));
 
-
-    for (unsigned int i = 0; i < allButtons.size(); i++)
-    {
+    for (unsigned int i = 0; i < allButtons.size(); i++) {
         connect(allButtons[i],SIGNAL(clicked()),this, SLOT(on_allButtons_clicked()));
         allButtons[i]->setCheckable(true);
     }
@@ -272,11 +252,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     hbox->addWidget(scene);
-    //view = new QScrollArea();
-    //view->setWidget(scene->imageLabel);
-    //hbox->addWidget(view);
     ui->centralWidget->setLayout(hbox);
-
 
     connect(palette, SIGNAL(colorsChanged(QColor,QColor)),scene, SLOT(changeColors(QColor,QColor)));
     connect(palette, SIGNAL(firstColorIsActive(bool)),scene, SLOT(firstColorActive(bool)));
@@ -284,23 +260,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this,SIGNAL(ShiftOn(bool)),scene,SLOT(shiftActive(bool)));
 
     connect(ui->actionClear, SIGNAL(triggered()), scene, SLOT(clearImage()));
-
-
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
 }
 
 
-void MainWindow::on_allButtons_clicked()
-{
+void MainWindow::on_allButtons_clicked() {
     QPushButton *currentButton = (QPushButton*) sender();
     qDebug()<<currentButton->objectName();
 
-    for (unsigned int i = 0; i < allButtons.size(); i++)
-    {
+    for (unsigned int i = 0; i < allButtons.size(); i++) {
         allButtons[i]->setChecked(false);
         allButtons[i]->setGraphicsEffect(0);
     }
@@ -309,83 +280,46 @@ void MainWindow::on_allButtons_clicked()
     pShadow->setXOffset(2);
     pShadow->setYOffset(2);
     currentButton->setGraphicsEffect(pShadow);
-   // scene->setSettings(currentButton->objectName(),palette->getCol1(),Qt::DotLine,palette->getCol2(),Qt::BDiagPattern);
-    scene->setSettings(currentButton->objectName(),palette->getCol1(),slider->value(),palette->getCol2(),scene->getPenStyle(),scene->getBrushStyle());
-
+    scene->setSettings(currentButton->objectName(),palette->getCol1(),slider->value(),
+                       palette->getCol2(),scene->getPenStyle(),scene->getBrushStyle());
 }
 
 
-QVBoxLayout *MainWindow::createToolsGroup()
-{
+QVBoxLayout *MainWindow::createToolsGroup() {
     QVBoxLayout *vbox = new QVBoxLayout;
 
     QHBoxLayout *hbox = new QHBoxLayout;
     QVBoxLayout *vbox1 = new QVBoxLayout;
     QVBoxLayout *vbox2 = new QVBoxLayout;
 
-
-    for (unsigned int i = 0; i < allButtons.size()/2;i++)
-    {
+    for (unsigned int i = 0; i < allButtons.size()/2;i++) {
         allButtons[i]->setFixedSize(30,30);
         vbox1->addWidget(allButtons[i]);
         vbox1->addStretch(3);
     }
     hbox->addLayout(vbox1);
-    for (unsigned int i = allButtons.size()/2; i < allButtons.size();i++)
-    {
+    for (unsigned int i = allButtons.size()/2; i < allButtons.size();i++) {
         allButtons[i]->setFixedSize(30,30);
         vbox2->addWidget(allButtons[i]);
         vbox2->addStretch(3);
     }
     hbox->addLayout(vbox2);
+    hbox->setMargin(2);
+    hbox->setSpacing(-30);
+    hbox->setStretch(0,-1);
     vbox->addLayout(hbox);
     vbox->addSpacing(15);
-
     return vbox;
 }
 
-
-void MainWindow::penWidthChanged(int width)
-{
-    qDebug()<<width;
-    //QPixmap myPix(QSize(10,10) );
-    QPixmap myPix(10,10);
-    QPainter painter(&myPix);
-
-    //QPainter p(this);
-    //p.setBrush(QPixmap("/media/data/shot0015.jpg"));
-    //p.drawEllipse(rect());
-
-    painter.setBrush(Qt::black);
-    //painter.setPen(Qt::black);
-
-    //painter.drawEllipse(5,5,width,width);
-    painter.drawArc(QRect(0,0,5,5),0,360*16);
-
-
-
-   // label = new QLabel(width, this);
-    //label = new QLabel(QString(width),this);
-    //label->setText(QString::);
-    qDebug()<<label->text();
-    //qDebug()<<myPix;
-    label->setPixmap(myPix);
-    //label->setPicture(myPix.toImage());
-
-}
-
-void MainWindow::keyPressEvent(QKeyEvent *event)
-{
-        if (event->key() == Qt::Key_Shift)
-        {
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+        if (event->key() == Qt::Key_Shift) {
             emit ShiftOn(true);
         }
 }
 
-void MainWindow::keyReleaseEvent(QKeyEvent *event)
-{
-    if (event->key()==Qt::Key_Shift)
-    {
+void MainWindow::keyReleaseEvent(QKeyEvent *event) {
+    if (event->key()==Qt::Key_Shift) {
         emit ShiftOn(false);
     }
 }

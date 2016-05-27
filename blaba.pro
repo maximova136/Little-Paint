@@ -15,7 +15,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     abstractfigure.cpp \
-    paintscene.cpp \
     palette.cpp \
     palettebutton.cpp \
     paintarea.cpp \
@@ -23,7 +22,6 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     abstractfigure.h \
-    paintscene.h \
     palette.h \
     palettebutton.h \
     paintarea.h
