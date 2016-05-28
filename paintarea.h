@@ -4,6 +4,9 @@
 #include <QWidget>
 #include <QPainter>
 #include <QtWidgets>
+
+//unsigned int WIDTH, HEIGHT;
+
 class PaintArea : public QWidget
 {
     Q_OBJECT
@@ -26,10 +29,12 @@ public:
 signals:
     void pipetteColor(QColor);
     void signalBlockSettings(bool, bool, bool);
+//    void sizeWindow(int, int);
 
 public slots:
     void clearImage();
     void saveImage();
+    void openImage();
     void changeColors(QColor, QColor);
     void changeWidth(int);
     void changePenStyle(QString);
@@ -37,6 +42,7 @@ public slots:
     void changeTransparency(int);
     void firstColorActive(bool);
     void shiftActive(bool);
+    void slotChangeSize();
 
 protected:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;

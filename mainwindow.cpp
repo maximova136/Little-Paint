@@ -7,8 +7,7 @@
 #include <QDebug>
 #include <QtCore>
 #include <QScrollArea>
-//#include "paintarea.h"
-//#include "palette.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -92,7 +91,6 @@ MainWindow::MainWindow(QWidget *parent) :
     allButtons.push_back(pipetteButton);
     allButtons.push_back(lineButton);
     allButtons.push_back(curveButton);
-   // allButtons.push_back(textButton);
     allButtons.push_back(eraserButton);
     allButtons.push_back(selectionButton);
 
@@ -245,7 +243,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(brushPattern,SIGNAL(activated(QString)),scene,SLOT(changeBrushStyle(QString)));
 
-
     QHBoxLayout *hbox = new QHBoxLayout;
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->addLayout(createToolsGroup());
@@ -290,10 +287,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(scene, SIGNAL(signalBlockSettings(bool,bool,bool)), this, SLOT(blockSettings(bool,bool,bool)));
     emit scene->signalBlockSettings(true,true, false);
-    connect(this,SIGNAL(ShiftOn(bool)),scene,SLOT(shiftActive(bool)));
+    connect(this, SIGNAL(ShiftOn(bool)),scene,SLOT(shiftActive(bool)));
+
 
     connect(ui->actionClear, SIGNAL(triggered()), scene, SLOT(clearImage()));
     connect(ui->actionSaveAs, SIGNAL(triggered()), scene, SLOT(saveImage()));
+    connect(ui->actionOpen, SIGNAL(triggered()), scene, SLOT(openImage()));
+    connect(ui->actionClose,SIGNAL(triggered()),this,SLOT(close()));
+//    connect(ui->actionSize, SIGNAL(triggered()), scene, SLOT(slotChangeSize()));
+
+
 
 }
 
@@ -359,24 +362,19 @@ QVBoxLayout *MainWindow::createToolsGroup() {
 
     for (unsigned int i = 0; i < allButtons.size()/2;i++) {
         allButtons[i]->setFixedSize(30,30);
-        vbox1->addWidget(allButtons[i]);
-        //vbox1->addStretch(3);
+        vbox1->addWidget(allButtons[i]);;
         vbox1->addSpacing(2);
     }
     hbox->addLayout(vbox1);
     for (unsigned int i = allButtons.size()/2; i < allButtons.size();i++) {
         allButtons[i]->setFixedSize(30,30);
         vbox2->addWidget(allButtons[i]);
-        //vbox2->addStretch(3);
          vbox2->addSpacing(2);
     }
     hbox->addLayout(vbox2);
     hbox->setMargin(0);
-    //hbox->setSpacing(-30);
-    //hbox->setStretch(0,-1);
-//    hbox->
+
     vbox->addLayout(hbox);
-    //vbox->addSpacing(15);
     vbox->setMargin(5);
     return vbox;
 }
@@ -384,11 +382,15 @@ QVBoxLayout *MainWindow::createToolsGroup() {
 void MainWindow::keyPressEvent(QKeyEvent *event) {
         if (event->key() == Qt::Key_Shift) {
             emit ShiftOn(true);
-        }
+        } /*else if (event->key() == Qt::Key_Delete) {
+            emit signalDelete(true);
+        }*/
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     if (event->key()==Qt::Key_Shift) {
         emit ShiftOn(false);
-    }
+    } /*else if (event->key() == Qt::Key_Delete) {
+        emit signalDelete(false);
+    }*/
 }

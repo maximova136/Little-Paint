@@ -12,7 +12,7 @@
 #include "palette.h"
 #include "paintarea.h"
 
-enum BUTTON {ELLIPSE=0, RECTANGLE, TRIANGLE, LINE, CURVE, POLYGON};
+//enum BUTTON {ELLIPSE=0, RECTANGLE, TRIANGLE, LINE, CURVE, POLYGON};
 class QGroupBox;
 namespace Ui {
     class MainWindow;
@@ -36,6 +36,7 @@ public slots:
 signals:
     void clicked(int x);
     void ShiftOn(bool);
+//    void signalDelete(bool);
 
 private:
     Ui::MainWindow *ui;

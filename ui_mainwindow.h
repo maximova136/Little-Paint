@@ -27,6 +27,8 @@ class Ui_MainWindow
 public:
     QAction *actionSaveAs;
     QAction *actionClear;
+    QAction *actionOpen;
+    QAction *actionClose;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -43,6 +45,10 @@ public:
         actionSaveAs->setObjectName(QStringLiteral("actionSaveAs"));
         actionClear = new QAction(MainWindow);
         actionClear->setObjectName(QStringLiteral("actionClear"));
+        actionOpen = new QAction(MainWindow);
+        actionOpen->setObjectName(QStringLiteral("actionOpen"));
+        actionClose = new QAction(MainWindow);
+        actionClose->setObjectName(QStringLiteral("actionClose"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         MainWindow->setCentralWidget(centralWidget);
@@ -60,7 +66,9 @@ public:
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuEdit->menuAction());
+        menuFile->addAction(actionOpen);
         menuFile->addAction(actionSaveAs);
+        menuFile->addAction(actionClose);
         menuEdit->addAction(actionClear);
 
         retranslateUi(MainWindow);
@@ -73,6 +81,8 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "LiPa (Little Paint)", 0));
         actionSaveAs->setText(QApplication::translate("MainWindow", "Save As ", 0));
         actionClear->setText(QApplication::translate("MainWindow", "Clear", 0));
+        actionOpen->setText(QApplication::translate("MainWindow", "Open", 0));
+        actionClose->setText(QApplication::translate("MainWindow", "Close", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0));
     } // retranslateUi
