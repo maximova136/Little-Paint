@@ -15,7 +15,7 @@ PaintArea::PaintArea(QWidget *parent) : QWidget(parent) {
     firstColActive = true;
     image = QImage(QSize(600,350),QImage::Format_ARGB32_Premultiplied);
     // Here is possible to create transparent canvas
-   image.fill(Qt::white);
+    image.fill(Qt::white);
 //    QPainter painter(&image);
 //    painter.fillRect(0,0,600,350,Qt::transparent);
 //    painter.setCompositionMode(QPainter::CompositionMode_Clear);
@@ -37,6 +37,10 @@ void PaintArea::clearImage() {
     image.fill(qRgb(255, 255, 255));
     copyImage = image;
     modified = true;
+    scribbling = false;
+    selectionOn = false;
+    wasMovedSelection = false;
+    drawCurve = false;
     update();
 }
 
@@ -203,6 +207,11 @@ void PaintArea::mousePressEvent(QMouseEvent *event) {
         {
             qDebug()<<"selection ";
             selection.setCoords(lastPoint.x(),lastPoint.y(), cEndPoint.x(),cEndPoint.y());
+            qDebug()<<selection <<event->pos();
+            if ((selection.size().width() < 0) || (selection.size().height()<0)){
+                selection.setCoords(cEndPoint.x(),cEndPoint.y(),lastPoint.x(),lastPoint.y());
+            }
+            qDebug()<<selection <<event->pos();
             if (QRegion(selection).contains(event->pos()))
             {
                 bufImage = image.copy(selection);
@@ -212,6 +221,13 @@ void PaintArea::mousePressEvent(QMouseEvent *event) {
                 qDebug()<<"don't contains";
                 scribbling = false;
                 selectionOn = false;
+                copyImage = image;
+//                QPaintEvent *event = new QPaintEvent((QRegion(0,0,image.width(),image.height())));
+//                paintEvent(event);
+//                QPainter painter(&copyImage);
+//                painter.drawImage(0,0,image);
+//                emit repaint();
+                update();
             }
         }
     }
@@ -342,15 +358,20 @@ void PaintArea::mouseReleaseEvent(QMouseEvent *event)
         qDebug()<<"RELEASE selection"<<selectionOn;
         if (wasMovedSelection)
         {
+            cEndPoint = event->pos();
+
             qDebug()<<"was moved";
             if (!selectionOn) {
                 qDebug()<<"no selection ";
                 if (scribbling) {
                     qDebug()<<"scribble";
+                    qDebug() << event->pos();
                     cEndPoint = event->pos();
                     selectionOn = true;
                 } else {
                     qDebug()<<"not scribble";
+//                    cEndPoint = event->pos();
+
                 }
             } else {
                 qDebug()<<"selection ";
@@ -472,7 +493,7 @@ void PaintArea::paint(const QPoint &endPoint)
          else if (drawableObj == "Selection") {
              qDebug()<<"paint selection"<<selectionOn;
              if (!selectionOn) {
-                 painter.setPen(QPen(penColor, pen.width(), Qt::DashLine, Qt::RoundCap, Qt::RoundJoin));
+                 painter.setPen(QPen(Qt::black, 2, Qt::DashLine, Qt::RoundCap, Qt::RoundJoin));
                  painter.setBrush(QBrush(Qt::transparent));
 //                 painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
                  if (shiftOn) {
@@ -572,9 +593,12 @@ void PaintArea::setSettings(QString _drawableObj, QColor _penColor, int width, Q
         emit signalBlockSettings(true,true,false);
     } else if (drawableObj == "Line") {
         emit signalBlockSettings(false,true,false);
+    } else if (drawableObj == "Selection") {
+        emit signalBlockSettings(true,true,true);
     } else {
         emit signalBlockSettings(false,false,false);
     }
+
 }
 
 

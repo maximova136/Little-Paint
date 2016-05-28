@@ -25,8 +25,6 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
-    QAction *actionNew;
-    QAction *actionOpen;
     QAction *actionSaveAs;
     QAction *actionClear;
     QWidget *centralWidget;
@@ -41,10 +39,6 @@ public:
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->resize(632, 400);
         MainWindow->setMinimumSize(QSize(600, 400));
-        actionNew = new QAction(MainWindow);
-        actionNew->setObjectName(QStringLiteral("actionNew"));
-        actionOpen = new QAction(MainWindow);
-        actionOpen->setObjectName(QStringLiteral("actionOpen"));
         actionSaveAs = new QAction(MainWindow);
         actionSaveAs->setObjectName(QStringLiteral("actionSaveAs"));
         actionClear = new QAction(MainWindow);
@@ -66,8 +60,6 @@ public:
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuEdit->menuAction());
-        menuFile->addAction(actionNew);
-        menuFile->addAction(actionOpen);
         menuFile->addAction(actionSaveAs);
         menuEdit->addAction(actionClear);
 
@@ -79,12 +71,6 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "LiPa (Little Paint)", 0));
-        actionNew->setText(QApplication::translate("MainWindow", "New", 0));
-        actionNew->setShortcut(QApplication::translate("MainWindow", "F1", 0));
-        actionOpen->setText(QApplication::translate("MainWindow", "Open", 0));
-#ifndef QT_NO_TOOLTIP
-        actionOpen->setToolTip(QApplication::translate("MainWindow", "Open an image file", 0));
-#endif // QT_NO_TOOLTIP
         actionSaveAs->setText(QApplication::translate("MainWindow", "Save As ", 0));
         actionClear->setText(QApplication::translate("MainWindow", "Clear", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
