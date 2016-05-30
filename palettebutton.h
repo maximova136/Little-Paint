@@ -3,11 +3,11 @@
 
 #include <QToolButton>
 
-class paletteButton : public QToolButton
+class PaletteButton : public QToolButton
 {
     Q_OBJECT
 public:
-    paletteButton(const QColor &color);
+    PaletteButton(const QColor &color);
     QColor getColor();
 
 signals:

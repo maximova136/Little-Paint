@@ -2,8 +2,6 @@
 #define PALETTE_H
 
 #include <QWidget>
-//#include <QtGui>
-//#include <QtCore>
 #include <QtWidgets>
 #include "palettebutton.h"
 
@@ -18,7 +16,6 @@ public:
     bool isFirstColActive();
 
 signals:
-    //void colorChanged();
     void colorsChanged(QColor, QColor);
     void firstColorIsActive(bool);
 
@@ -33,9 +30,8 @@ private:
     bool firstColActive;
     std::vector <QPushButton*> colors;
 
-
     QToolButton* choose;
-    paletteButton *butCol1, *butCol2;
+    PaletteButton *butCol1, *butCol2;
 
     QToolBar *mToolBar;
 

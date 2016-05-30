@@ -4,17 +4,15 @@
 #include <QMainWindow>
 #include <QtGui>
 #include <QtCore>
-//#include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QtWidgets>
 #include <QWidget>
 #include <vector>
 
 #include "palette.h"
-#include "paintscene.h"
 #include "paintarea.h"
 
-enum BUTTON {ELLIPSE=0, RECTANGLE, TRIANGLE, LINE, CURVE, POLYGON};
+//enum BUTTON {ELLIPSE=0, RECTANGLE, TRIANGLE, LINE, CURVE, POLYGON};
 class QGroupBox;
 namespace Ui {
     class MainWindow;
@@ -29,29 +27,37 @@ public:
     ~MainWindow();
 
 private slots:
-    //void on_Buttons_clicked(int);
     void on_allButtons_clicked();
+    void blockSettings(bool penBoxBlocked, bool brushBoxBlocked, bool sliderBlocked);
+    void setTranspPercentage(int);
+
+public slots:
 
 signals:
     void clicked(int x);
+    void ShiftOn(bool);
+//    void signalDelete(bool);
 
 private:
     Ui::MainWindow *ui;
-    ///paintScene *scene;
-    paintArea *scene;
+    QScrollArea* view;
+    PaintArea *scene;
     QGraphicsEllipseItem *ellipse;
     QGraphicsRectItem *rectangle;
     std::vector <QPushButton*> allButtons;
     Palette *palette;
     QToolBar *mToolbar;
+    QSlider *slider;
+    QSlider *eraserTransparency;
+    QComboBox *penPattern;
+    QComboBox *brushPattern;
+    QLabel* sliderLabel;
+    QLabel* eraserLabel;
 
 
     QVBoxLayout *createToolsGroup();
-
-   // void mousePressEvent(QGraphicsSceneMouseEvent *event);
-   // void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
-
-
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
 };
 
 #endif // MAINWINDOW_H

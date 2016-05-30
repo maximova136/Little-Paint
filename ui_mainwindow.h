@@ -18,7 +18,6 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -26,13 +25,14 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
-    QAction *actionNew;
+    QAction *actionSaveAs;
+    QAction *actionClear;
     QAction *actionOpen;
-    QAction *actionSave;
+    QAction *actionClose;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QMenu *menuFile;
-    QToolBar *mainToolBar;
+    QMenu *menuEdit;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -41,12 +41,14 @@ public:
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->resize(632, 400);
         MainWindow->setMinimumSize(QSize(600, 400));
-        actionNew = new QAction(MainWindow);
-        actionNew->setObjectName(QStringLiteral("actionNew"));
+        actionSaveAs = new QAction(MainWindow);
+        actionSaveAs->setObjectName(QStringLiteral("actionSaveAs"));
+        actionClear = new QAction(MainWindow);
+        actionClear->setObjectName(QStringLiteral("actionClear"));
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName(QStringLiteral("actionOpen"));
-        actionSave = new QAction(MainWindow);
-        actionSave->setObjectName(QStringLiteral("actionSave"));
+        actionClose = new QAction(MainWindow);
+        actionClose->setObjectName(QStringLiteral("actionClose"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         MainWindow->setCentralWidget(centralWidget);
@@ -55,18 +57,19 @@ public:
         menuBar->setGeometry(QRect(0, 0, 632, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
+        menuEdit = new QMenu(menuBar);
+        menuEdit->setObjectName(QStringLiteral("menuEdit"));
         MainWindow->setMenuBar(menuBar);
-        mainToolBar = new QToolBar(MainWindow);
-        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
-        MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
 
         menuBar->addAction(menuFile->menuAction());
-        menuFile->addAction(actionNew);
+        menuBar->addAction(menuEdit->menuAction());
         menuFile->addAction(actionOpen);
-        menuFile->addAction(actionSave);
+        menuFile->addAction(actionSaveAs);
+        menuFile->addAction(actionClose);
+        menuEdit->addAction(actionClear);
 
         retranslateUi(MainWindow);
 
@@ -76,14 +79,12 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "LiPa (Little Paint)", 0));
-        actionNew->setText(QApplication::translate("MainWindow", "New", 0));
-        actionNew->setShortcut(QApplication::translate("MainWindow", "F1", 0));
+        actionSaveAs->setText(QApplication::translate("MainWindow", "Save As ", 0));
+        actionClear->setText(QApplication::translate("MainWindow", "Clear", 0));
         actionOpen->setText(QApplication::translate("MainWindow", "Open", 0));
-#ifndef QT_NO_TOOLTIP
-        actionOpen->setToolTip(QApplication::translate("MainWindow", "Open an image file", 0));
-#endif // QT_NO_TOOLTIP
-        actionSave->setText(QApplication::translate("MainWindow", "Save", 0));
+        actionClose->setText(QApplication::translate("MainWindow", "Close", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
+        menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0));
     } // retranslateUi
 
 };
