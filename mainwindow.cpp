@@ -287,7 +287,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(scene, SIGNAL(signalBlockSettings(bool,bool,bool)), this, SLOT(blockSettings(bool,bool,bool)));
     emit scene->signalBlockSettings(true,true, false);
-    connect(this, SIGNAL(ShiftOn(bool)),scene,SLOT(shiftActive(bool)));
+    connect(this, SIGNAL(ShiftOn(bool)),scene,SLOT(slotShiftOn(bool)));
+    connect(this, SIGNAL(CtrlOn(bool)),scene,SLOT(slotCtrlOn(bool)));
+
 
 
     connect(ui->actionClear, SIGNAL(triggered()), scene, SLOT(clearImage()));
@@ -382,7 +384,10 @@ QVBoxLayout *MainWindow::createToolsGroup() {
 void MainWindow::keyPressEvent(QKeyEvent *event) {
         if (event->key() == Qt::Key_Shift) {
             emit ShiftOn(true);
-        } /*else if (event->key() == Qt::Key_Delete) {
+        } else if (event->key() == Qt::Key_Control) {
+            emit CtrlOn(true);
+        }
+        /*else if (event->key() == Qt::Key_Delete) {
             emit signalDelete(true);
         }*/
 }
@@ -390,6 +395,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     if (event->key()==Qt::Key_Shift) {
         emit ShiftOn(false);
+    } else if (event->key() == Qt::Key_Control) {
+        emit CtrlOn(false);
     } /*else if (event->key() == Qt::Key_Delete) {
         emit signalDelete(false);
     }*/

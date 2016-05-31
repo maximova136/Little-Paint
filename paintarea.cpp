@@ -6,6 +6,7 @@ PaintArea::PaintArea(QWidget *parent) : QWidget(parent) {
     scribbling = false;
     myPenWidth = 1;
     shiftOn = false;
+    ctrlOn = false;
     selectionOn = false;
     drawCurve = false;
     wasMovedSelection = false;
@@ -27,21 +28,23 @@ PaintArea::PaintArea(QWidget *parent) : QWidget(parent) {
     update();
 }
 
-void PaintArea::shiftActive(bool active) {
+void PaintArea::slotShiftOn(bool active) {
     if (active)
         shiftOn = true;
     else
         shiftOn = false;
 }
-//void PaintArea::deleteElem(bool del) {
-//    if (selectionOn) {
 
-//    }
-//}
+void PaintArea::slotCtrlOn(bool active) {
+    if (active)
+        ctrlOn = true;
+    else
+        ctrlOn = false;
+}
+
 
 void PaintArea::slotChangeSize() {
     QLineEdit w, h;
-
 
 }
 
@@ -98,7 +101,6 @@ void PaintArea::openImage() {
             QMessageBox::warning(this, tr("Error opening file"), tr("Can't open file \"%1\".").arg(fileFullName));
         } else {
             qDebug()<<image.size()<< size() << pos () ;
-            //update();
             QSize screenSize = QApplication::desktop()->screenGeometry().size();
             if (image.height() > (screenSize.height() - 120)) {
                 image = image.scaledToHeight(screenSize.height() - 120,Qt::SmoothTransformation);
@@ -544,7 +546,10 @@ void PaintArea::paint(const QPoint &endPoint)
                      painter.drawRect(QRect(lastPoint,endPoint));
                  }
              } else {
-                 painter.fillRect(selection,brushColor);
+                 if (!ctrlOn)
+                 {
+                     painter.fillRect(selection,brushColor);
+                 }
                  painter.drawImage(QPoint(endPoint.x()-bufImage.width()/2,endPoint.y()-bufImage.height()/2),bufImage);
              }
          }
