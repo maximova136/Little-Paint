@@ -81,7 +81,6 @@ MainWindow::MainWindow(QWidget *parent) :
     selectionButton->setIconSize(QSize(25,25));
     selectionButton->setToolTip(selectionButton->objectName());
 
-
     allButtons.clear();
     allButtons.push_back(brushButton);
     allButtons.push_back(ellipseButton);
@@ -108,24 +107,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(slider, SIGNAL(valueChanged(int)),sliderLabel,SLOT(setNum(int)));
     connect(slider, SIGNAL(valueChanged(int)),scene, SLOT(changeWidth(int)));
-
-    /*eraserTransparency = new QSlider(Qt::Vertical);
-    eraserTransparency->setToolTip("Transparency Level");
-    eraserLabel = new QLabel("0%");
-    eraserLabel->setMaximumWidth(20);
-    eraserTransparency->setRange(0,10);
-    eraserTransparency->setTickInterval(1);
-    eraserTransparency->setValue(0);
-    eraserTransparency->setMaximumWidth(25);
-    eraserTransparency->setMaximumHeight(80);
-    eraserTransparency->setMinimumHeight(50);
-    eraserTransparency->setTickPosition(QSlider::TicksLeft);
-    eraserTransparency->setVisible(false);
-    eraserLabel->setVisible(false);
-
-    connect(eraserTransparency, SIGNAL(valueChanged(int)),this,SLOT(setTranspPercentage(int)));
-    connect(eraserTransparency, SIGNAL(valueChanged(int)), scene, SLOT(changeTransparency(int)));*/
-
 
     penPattern = new QComboBox();
     QPixmap pix (50,50);
@@ -175,6 +156,7 @@ MainWindow::MainWindow(QWidget *parent) :
     penPattern->setFixedWidth(100);
 
     connect(penPattern,SIGNAL(activated(QString)),scene,SLOT(changePenStyle(QString)));
+    connect(scene, SIGNAL(signalChangePenStyle(QString)), penPattern, SLOT(setCurrentText(QString)));
 
     brushPattern = new QComboBox();
 
@@ -351,10 +333,6 @@ void MainWindow::blockSettings(bool penBoxBlocked, bool brushBoxBlocked, bool sl
     }
 }
 
-void MainWindow::setTranspPercentage(int value){
-    eraserLabel->setText(QString::number(value*10) + "%");
-}
-
 QVBoxLayout *MainWindow::createToolsGroup() {
     QVBoxLayout *vbox = new QVBoxLayout;
 
@@ -382,14 +360,11 @@ QVBoxLayout *MainWindow::createToolsGroup() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
-        if (event->key() == Qt::Key_Shift) {
-            emit ShiftOn(true);
-        } else if (event->key() == Qt::Key_Control) {
-            emit CtrlOn(true);
-        }
-        /*else if (event->key() == Qt::Key_Delete) {
-            emit signalDelete(true);
-        }*/
+    if (event->key() == Qt::Key_Shift) {
+        emit ShiftOn(true);
+    } else if (event->key() == Qt::Key_Control) {
+        emit CtrlOn(true);
+    }
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
@@ -397,7 +372,5 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
         emit ShiftOn(false);
     } else if (event->key() == Qt::Key_Control) {
         emit CtrlOn(false);
-    } /*else if (event->key() == Qt::Key_Delete) {
-        emit signalDelete(false);
-    }*/
+    }
 }

@@ -26,6 +26,7 @@ signals:
     void pipetteColor(QColor);
     void signalBlockSettings(bool, bool, bool);
 //    void sizeWindow(int, int);
+    void signalChangePenStyle(QString);
 
 public slots:
     void clearImage();
@@ -35,7 +36,6 @@ public slots:
     void changeWidth(int);
     void changePenStyle(QString);
     void changeBrushStyle(QString);
-    void changeTransparency(int);
     void firstColorActive(bool);
     void slotShiftOn(bool);
     void slotChangeSize();
@@ -47,14 +47,16 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-    void wheelEvent(QWheelEvent * event);
-
+//    void wheelEvent(QWheelEvent * event);
     void paint(const QPoint &endPoint);
 
 private:
     void brushTool(const QPoint &endPoint);
     void drawLine(const QPoint &endPoint);
     void resizeImage(QImage *image, const QSize &newSize);
+    void resizeImage(const QSize &newSize);
+    void setCurrentCursor();
+
     void fillTool(int x, int y, QRgb oldColor, QRgb newColor);
 
     bool modified;
@@ -65,8 +67,6 @@ private:
     bool wasMovedSelection;
     bool drawCurve;
 
-
-    int eraserTransparency;
     int myPenWidth;
     QImage image;
     QImage copyImage;
@@ -92,7 +92,7 @@ private:
 
     int topleft_x,topleft_y;
     bool scaleIsOn;
-//    double scaleFactor;
+    bool mIsResize;
 
 };
 
