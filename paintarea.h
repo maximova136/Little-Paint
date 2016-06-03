@@ -53,7 +53,6 @@ protected:
 private:
     void brushTool(const QPoint &endPoint);
     void drawLine(const QPoint &endPoint);
-    void resizeImage(QImage *image, const QSize &newSize);
     void resizeImage(const QSize &newSize);
     void setCurrentCursor();
 
@@ -89,6 +88,7 @@ private:
     QPen pen;
     bool firstColActive;
     Qt::MouseButton button;
+    QPixmap eraserPix;
 
     int topleft_x,topleft_y;
     bool scaleIsOn;
