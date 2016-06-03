@@ -5,7 +5,6 @@
 #include <QPainter>
 #include <QtWidgets>
 
-//unsigned int WIDTH, HEIGHT;
 
 class PaintArea : public QWidget
 {
@@ -48,6 +47,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void wheelEvent(QWheelEvent * event);
 
     void paint(const QPoint &endPoint);
 
@@ -89,6 +89,10 @@ private:
     QPen pen;
     bool firstColActive;
     Qt::MouseButton button;
+
+    int topleft_x,topleft_y;
+    bool scaleIsOn;
+//    double scaleFactor;
 
 };
 
