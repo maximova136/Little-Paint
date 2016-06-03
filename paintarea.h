@@ -5,22 +5,18 @@
 #include <QPainter>
 #include <QtWidgets>
 
-//unsigned int WIDTH, HEIGHT;
 
 class PaintArea : public QWidget
 {
     Q_OBJECT
 public:
     explicit PaintArea(QWidget *parent = 0);
-    //    bool openImage(const QString &fileName);
-    //    bool saveImage(const QString &fileName, const char *fileFormat);
 
     bool isModified() const { return modified; }
     QColor getPenColor() const { return penColor; }
     int penWidth() const { return myPenWidth; }
     Qt::PenStyle getPenStyle() {return penStyle;}
     Qt::BrushStyle getBrushStyle() const {return brushStyle;}
-    //void setSettings(QString _drawableObj, QColor _penColor,QPen _penStyle, QColor _brushColor,  QBrush _brushStyle);
     void setSettings(QString _drawableObj, QColor _penColor,  int width, QColor _brushColor, Qt::PenStyle _penStyle = Qt::SolidLine, Qt::BrushStyle _brushStyle = Qt::SolidPattern);
     void setColors(QColor col1, QColor col2);
     void setPen(int wid);
@@ -41,8 +37,9 @@ public slots:
     void changeBrushStyle(QString);
     void changeTransparency(int);
     void firstColorActive(bool);
-    void shiftActive(bool);
+    void slotShiftOn(bool);
     void slotChangeSize();
+    void slotCtrlOn(bool);
 
 protected:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
@@ -50,6 +47,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void wheelEvent(QWheelEvent * event);
 
     void paint(const QPoint &endPoint);
 
@@ -62,6 +60,7 @@ private:
     bool modified;
     bool scribbling;
     bool shiftOn;
+    bool ctrlOn;
     bool selectionOn;
     bool wasMovedSelection;
     bool drawCurve;
@@ -90,6 +89,10 @@ private:
     QPen pen;
     bool firstColActive;
     Qt::MouseButton button;
+
+    int topleft_x,topleft_y;
+    bool scaleIsOn;
+//    double scaleFactor;
 
 };
 

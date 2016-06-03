@@ -28,3 +28,5 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 DISTFILES +=
+
+RC_FILE = main.rc

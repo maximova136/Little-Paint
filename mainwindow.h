@@ -36,6 +36,7 @@ public slots:
 signals:
     void clicked(int x);
     void ShiftOn(bool);
+    void CtrlOn(bool);
 //    void signalDelete(bool);
 
 private:

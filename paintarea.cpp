@@ -6,42 +6,45 @@ PaintArea::PaintArea(QWidget *parent) : QWidget(parent) {
     scribbling = false;
     myPenWidth = 1;
     shiftOn = false;
+    ctrlOn = false;
     selectionOn = false;
     drawCurve = false;
     wasMovedSelection = false;
 
+    topleft_x = 0;
+    topleft_y = 0;
+    scaleIsOn = false;
     setSettings("Brush",Qt::black,myPenWidth,Qt::white);
     
     firstColActive = true;
     image = QImage(QSize(600,350),QImage::Format_ARGB32_Premultiplied);
-    // Here is possible to create transparent canvas
+    // Here it is possible to create transparent canvas
     image.fill(Qt::white);
 //    QPainter painter(&image);
 //    painter.fillRect(0,0,600,350,Qt::transparent);
 //    painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
-   /* eraserTransparency = 0;
-    capCount = 0;*/
-
     copyImage = image;
     update();
 }
 
-void PaintArea::shiftActive(bool active) {
+void PaintArea::slotShiftOn(bool active) {
     if (active)
         shiftOn = true;
     else
         shiftOn = false;
 }
-//void PaintArea::deleteElem(bool del) {
-//    if (selectionOn) {
 
-//    }
-//}
+void PaintArea::slotCtrlOn(bool active) {
+    if (active)
+        ctrlOn = true;
+    else
+        ctrlOn = false;
+}
+
 
 void PaintArea::slotChangeSize() {
     QLineEdit w, h;
-
 
 }
 
@@ -98,7 +101,6 @@ void PaintArea::openImage() {
             QMessageBox::warning(this, tr("Error opening file"), tr("Can't open file \"%1\".").arg(fileFullName));
         } else {
             qDebug()<<image.size()<< size() << pos () ;
-            //update();
             QSize screenSize = QApplication::desktop()->screenGeometry().size();
             if (image.height() > (screenSize.height() - 120)) {
                 image = image.scaledToHeight(screenSize.height() - 120,Qt::SmoothTransformation);
@@ -252,8 +254,8 @@ void PaintArea::mousePressEvent(QMouseEvent *event) {
             if (event->button()!=0) {
                 button = event->button();
             }
-
-        } else
+        }
+        else
         {
             qDebug()<<"selection ";
             selection.setCoords(lastPoint.x(),lastPoint.y(), cEndPoint.x(),cEndPoint.y());
@@ -414,7 +416,6 @@ void PaintArea::mouseReleaseEvent(QMouseEvent *event)
                     selectionOn = true;
                 } else {
                     qDebug()<<"not scribble";
-//                    cEndPoint = event->pos();
                 }
             } else {
                 qDebug()<<"selection ";
@@ -428,9 +429,6 @@ void PaintArea::mouseReleaseEvent(QMouseEvent *event)
                 else {
                     qDebug()<<"not scribble";
                     copyImage = image;
-//                    QPainter painter (&copyImage);
-//                    painter.drawImage(0,0,image);
-//                    painter.setPen(Qt::NoPen);
                     update(0,0,image.width(),image.height());
                 }
             }
@@ -442,22 +440,66 @@ void PaintArea::mouseReleaseEvent(QMouseEvent *event)
     qDebug()<<"mouse released";
 }
 
+void PaintArea::wheelEvent(QWheelEvent *event)
+{
+    qDebug()<< event->pos()
+           << event->pixelDelta()
+           << event->angleDelta();
+    if (event->angleDelta().y() > 0) {
+        copyImage = image.scaled(copyImage.width()*1.1,copyImage.height()*1.1,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+//        topleft_x -= 2;
+//        topleft_y -= 2;
+//        topleft_x *= 0.1;
+//        topleft_y *= 0.1;
+        topleft_x = event->pos().x()*0.1;
+        topleft_y = event->pos().y()*0.1;
+        scaleIsOn = true;
+
+    } else {
+        copyImage = image.scaled(copyImage.width()*0.9,copyImage.height()*0.9,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+//        topleft_x += 2;
+//        topleft_y += 2;
+//        topleft_x /= 0.1;
+//        topleft_y /= 0.1;
+        topleft_x = event->pos().x()*(-0.1);
+        topleft_y = event->pos().y()*(-0.1);
+        if (copyImage.size() == image.size()) {
+            qDebug()<<"size == size";
+            scaleIsOn = false;
+        }
+    }
+    update();
+
+}
+
 void PaintArea::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    QRect dirtyRect = event->rect(); 
+//    QRect dirtyRect = event->rect();
+    QRect targetRect = event->rect();
+    QRect sourceRect = event->rect();
+
+
 
     if ((drawableObj!="Line") && (drawableObj!="Ellipse") && (drawableObj!="Rectangle")
-            && (drawableObj!="Triangle") && (drawableObj != "Curve") && (drawableObj != "Selection")) {
-        painter.drawImage(dirtyRect, image, dirtyRect);
-        qDebug()<<"painEvent1";
+            && (drawableObj!="Triangle") && (drawableObj != "Curve")
+            && (drawableObj != "Selection")) {
+//        sourceRect.setX(sourceRect.x() + topleft_x);
+//        sourceRect.setY(sourceRect.y() + topleft_y);
+        painter.drawImage(targetRect, image, sourceRect);
+       // qDebug()<<"painEvent1";
 
     } else {
-        painter.drawImage(dirtyRect,copyImage,dirtyRect);
-        qDebug()<<"painEvent2";
+        sourceRect.setX(sourceRect.x() + topleft_x);
+        sourceRect.setY(sourceRect.y() + topleft_y);
 
+        painter.drawImage(targetRect,copyImage,sourceRect);
+        //qDebug()<<"painEvent2";
     }
+
+//    qDebug()<<dirtyRect;
+    qDebug()<<targetRect<<sourceRect;
     painter.end();
 }
 
@@ -482,7 +524,8 @@ void PaintArea::resizeEvent(QResizeEvent *event)
 
 void PaintArea::paint(const QPoint &endPoint)
 {
-     copyImage = image;
+    if (!scaleIsOn)
+        copyImage = image;
      QPainter painter(&copyImage);
      painter.setRenderHint(QPainter::Antialiasing, true);
 
@@ -494,7 +537,7 @@ void PaintArea::paint(const QPoint &endPoint)
          painter.setBrush(QBrush(penColor,brushStyle));
      }
 
-     if (lastPoint!=endPoint) {
+     if (lastPoint != endPoint) {
          if (drawableObj == "Ellipse") {
              if (shiftOn) {
                  painter.drawEllipse(QRect(lastPoint,QSize(endPoint.y()-lastPoint.y(),endPoint.y()-lastPoint.y())));
@@ -544,7 +587,10 @@ void PaintArea::paint(const QPoint &endPoint)
                      painter.drawRect(QRect(lastPoint,endPoint));
                  }
              } else {
-                 painter.fillRect(selection,brushColor);
+                 if (!ctrlOn)
+                 {
+                     painter.fillRect(selection,brushColor);
+                 }
                  painter.drawImage(QPoint(endPoint.x()-bufImage.width()/2,endPoint.y()-bufImage.height()/2),bufImage);
              }
          }
