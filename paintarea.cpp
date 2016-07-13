@@ -16,6 +16,8 @@ PaintArea::PaintArea(QWidget *parent) : QWidget(parent) {
     topleft_y = 0;
     scaleIsOn = false;
     setSettings("Brush",Qt::black,myPenWidth,Qt::white);
+    eraserPix = QPixmap(1,1);
+
     
     firstColActive = true;
     image = QImage(QSize(400,250),QImage::Format_ARGB32_Premultiplied);
@@ -176,17 +178,20 @@ void PaintArea::firstColorActive(bool first) {
         firstColActive = false;
 }
 
-void PaintArea::setPen( int wid) {
-    pen.setWidth(wid);
+void PaintArea::setPen(int wid) {
+
     if (drawableObj == "Eraser") {
-        QPixmap pix(wid,wid);
-        QPainter painter(&pix);
-        painter.setPen(QPen(Qt::black,1,Qt::SolidLine));
-        painter.setBrush(QBrush(Qt::white,Qt::SolidPattern));
-        painter.drawRect(0,0,wid-1,wid-1);
-        painter.end();
-        setCursor(QCursor(pix));
+        if (pen.width() != wid) {
+            eraserPix = QPixmap(wid,wid);
+            QPainter painter(&eraserPix);
+            painter.setPen(QPen(Qt::black,1,Qt::SolidLine));
+            painter.setBrush(QBrush(Qt::white,Qt::SolidPattern));
+            painter.drawRect(0,0,wid-1,wid-1);
+            painter.end();
+        }
+        setCursor(QCursor(eraserPix));
     }
+    pen.setWidth(wid);
 }
 
 void PaintArea::setPen(Qt::PenStyle _style) {
@@ -301,8 +306,8 @@ void PaintArea::mouseMoveEvent(QMouseEvent *event)
 {
     if (mIsResize)
     {
-        if (this->rect().contains(event->pos()))
-            resizeImage(QSize(event->x(),event->y()));
+        if (QRect(this->rect().left(),this->rect().top(),this->rect().width()-6, this->rect().height()-6).contains(event->pos()))
+                resizeImage(QSize(event->x(),event->y()));
     }
     else if (event->buttons() != 0)
     {
@@ -563,12 +568,7 @@ void PaintArea::resizeEvent(QResizeEvent *event)
         //resizeImage(&image, QSize(image.width(),image.height()));
         update();
     }*/
-//    if ((width() > image.width()) || (height() > image.height())) {
-//        int newWidth = qMin(width(),image.width());
-//        int newHeight = qMin(height(), image.height());
-//        resizeImage(&image, QSize(newWidth,newHeight));
-//        update();
-//    }
+
     QWidget::resizeEvent(event);
     update();
 }
@@ -692,24 +692,10 @@ void PaintArea::brushTool(const QPoint &endPoint){
     lastPoint = endPoint;
 }
 
-void PaintArea::resizeImage(QImage *image, const QSize &newSize)
-{
-    if (image->size() == newSize)
-        return;
-    QImage newImage(newSize, QImage::Format_ARGB32_Premultiplied);
-    newImage.fill(Qt::white);
-    QPainter painter(&newImage);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.drawImage(QPoint(0, 0), *image);
-    *image = newImage;
-}
-
 void PaintArea::resizeImage(const QSize &newSize)
 {
     if (image.size() == newSize)
         return;
-//    else if (image.size() > size())
-        qDebug()<<this->size();
     QImage newImage(newSize, QImage::Format_ARGB32_Premultiplied);
     newImage.fill(Qt::white);
     QPainter painter(&newImage);
@@ -738,20 +724,7 @@ void PaintArea::setSettings(QString _drawableObj, QColor _penColor, int width, Q
     qDebug()<<"set settings2"<<drawableObj;
     qDebug()<<_penColor<<width<<_brushColor<<_penStyle<<_brushStyle;
     myPenWidth = width;
-/*
-    setCursor(Qt::ArrowCursor);
-    if (drawableObj == "Fill") {
-        setCursor(QCursor(QPixmap("media/cursor_fill.png")));
-    } else if (drawableObj == "Pipette") {
-        setCursor(QCursor(QPixmap("media/cursor_pipette.png")));
-    } else if ((drawableObj == "Line") || (drawableObj == "Curve") || (drawableObj == "Ellipse") || (drawableObj == "Rectangle") || (drawableObj == "Triangle") || (drawableObj == "Selection")) {
-        setCursor(Qt::CrossCursor);
-    } else if (drawableObj == "Eraser") {
-        changeWidth(width);
-    } else if (drawableObj == "Brush") {
-        setCursor(QCursor(QPixmap("media/cursor_pencil.png")));
-    }
-    */
+
     if ((drawableObj == "Fill") || (drawableObj == "Pipette")) {
         emit signalBlockSettings(true,true,true);
     } else if ((drawableObj == "Brush") || (drawableObj == "Eraser")) {

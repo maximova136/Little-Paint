@@ -79,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
     selectionButton->setObjectName("Selection");
     selectionButton->setIcon(QIcon("media/selection.png"));
     selectionButton->setIconSize(QSize(25,25));
-    selectionButton->setToolTip(selectionButton->objectName());
+    selectionButton->setToolTip(selectionButton->objectName()+"\nPress Ctrl to copy");
 
     allButtons.clear();
     allButtons.push_back(brushButton);
